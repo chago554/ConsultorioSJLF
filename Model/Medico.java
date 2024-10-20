@@ -19,8 +19,6 @@ public class Medico {
 	@Column
 	String apellidosSJLF;
 	
-	
-	
 	//Seters y getters
 	
 	public Long getId() {
