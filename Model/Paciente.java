@@ -15,7 +15,7 @@ public class Paciente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
-	@Column
+	@Column(length = 18)
 	String curpSJLF;
 
 	@Column
