@@ -69,5 +69,41 @@ public class PacienteController {
 	}
 
 	// modificar --> falta
+	@PostMapping("modificarSJLF")
+	public String postModificar(@RequestBody Paciente paciente) {
+		Optional<Paciente> elPaciente = pacienteRepo.findById(paciente.getId());
+		Optional<Paciente> laCurp = pacienteRepo.findByCurpSJLF(paciente.getCurpSJLF());
 
+		if (elPaciente.isPresent()) {
+
+
+			if (paciente.getNombreSJLF().isEmpty() || paciente.getCurpSJLF().isEmpty()) {
+				return "¡Por favor, rellene los campos obligatorios!";
+			}
+
+			if (paciente.getCurpSJLF().length() < 18) {
+				return "La Longitud de la CURP esta incompleta";
+			}
+		
+			if (!Pattern.matches("[a-zA-Z0-9]+", paciente.getCurpSJLF().toString())) { // valida que no se ingresen caracteres especiales
+				return "La CURP no debe de contener espacios en blanco o caracteres especiales";
+			}
+			
+			if (laCurp.isPresent() && laCurp.get().getId() != paciente.getId()) {
+				return "La CURP ya existe";
+			}
+
+			elPaciente.get().setNombreSJLF(paciente.getNombreSJLF());	
+			elPaciente.get().setCurpSJLF(paciente.getCurpSJLF());	
+			elPaciente.get().setTipoSangre(paciente.getTipoSangre());
+			
+			pacienteRepo.save(elPaciente.get());
+			return "¡Paciente actualizado exitosamente!";
+
+		}
+		return "El paciente NO existe";
+	}
+	
+	
+	
 }
