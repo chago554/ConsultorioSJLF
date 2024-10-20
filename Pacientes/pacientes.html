@@ -17,9 +17,6 @@
             }
         });
     }
-
-
-
     //   <!-- Es para mostrar los datos de mi BD en las tablas-->
     function mostrarPacientes(lista) {
         var body = '';
@@ -64,12 +61,7 @@
         $('#tablaPacientes > tbody').html(body);
     }
 
-
-
-
-
-
-    //eliminar tarea
+    //eliminar 
     function eliminarPaciente(idPaciente) {
         var datos = {
             id: idPaciente
@@ -89,17 +81,12 @@
                     '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
                     ' <strong class="h5">' + respuesta + '</strong>';
                 $("#divAlertas").html(alerta);
-
-                //Por 3 segundos, luego se pone null 
                 setTimeout(() => {
                     $("#divAlertas").html(null);
                 }, 3000);
             }
         });
     }
-
-
-
 
     //modificar tarea
     function modificarPaciente(idPaciente) {
@@ -109,21 +96,21 @@
     }
 </script>
 
-<div class="pt-5 pb-5">
-
+<div class="row">
+    <div class="col p-5">
+        <table class="table table-hover" id="tablaPacientes">
+            <thead class=" align-items-center">
+                <tr class="table-dark ">
+                    <th scope="col" class="align-middle">Nombre</th>
+                    <th scope="col" class="align-middle">CURP
+                    <th scope="col" class="align-middle">Tipo de sangre</th>
+        
+                    <th scope="col"><button type="button" onclick=' $("#divPrincipal").load("Pacientes/nuevo.html");'
+                            class="btn btn-success align-middle">Nuevo paciente</button></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<table class="table table-hover" id="tablaPacientes">
-    <thead class=" align-items-center">
-        <tr class="table-dark ">
-            <th scope="col" class="align-middle">Nombre</th>
-            <th scope="col" class="align-middle">CURP
-            <th scope="col" class="align-middle">Tipo de sangre</th>
-
-            <th scope="col"><button type="button" onclick=' $("#divPrincipal").load("Pacientes/nuevo.html");'
-                    class="btn btn-success align-middle">Nuevo paciente</button></th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
