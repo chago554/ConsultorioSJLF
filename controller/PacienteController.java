@@ -24,7 +24,27 @@ public class PacienteController {
 	public List<Paciente> postListar() {
 		return pacienteRepo.findAll();
 	}
-
+	
+	//guardar
+	@PostMapping("guardarSJLF")
+	public String postCrear(@RequestBody Paciente paciente) {
+		pacienteRepo.save(paciente);
+		return "¡Paciente guardado con exito!";
+	}
+	
+	
+	//consultar a un paciente especifico
+	@PostMapping("consultarSJLF")
+	public Paciente postMethodName(@RequestBody Paciente paciente) {
+		Optional<Paciente> elPaciente = pacienteRepo.findById(paciente.getId());
+		if(elPaciente.isPresent()) {
+			return elPaciente.get();
+			}
+		return new Paciente();
+	}
+	
+	
+	
 	// Eliminar
 	@PostMapping("eliminarSJLF")
 	public String postEliminar(@RequestBody Paciente paciente) {
@@ -35,5 +55,8 @@ public class PacienteController {
 		}
 		return "Paciente no encontrado";
 	}
+	
+	
+	//modificar --> falta
 
 }
