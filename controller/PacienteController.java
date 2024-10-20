@@ -68,7 +68,7 @@ public class PacienteController {
 		return "Paciente no encontrado";
 	}
 
-	// modificar --> falta
+	// modificar 
 	@PostMapping("modificarSJLF")
 	public String postModificar(@RequestBody Paciente paciente) {
 		Optional<Paciente> elPaciente = pacienteRepo.findById(paciente.getId());
