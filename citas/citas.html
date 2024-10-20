@@ -1,0 +1,102 @@
+<script>
+
+    $(function () {
+        cargarCitas();
+    });
+
+    function cargarCitas() {
+        $.ajax({
+            url: backend + "/citasSJLF/listarSJLF",
+            type: 'post',
+            datatype: 'json',
+            xhrFields: { withCredentials: true },
+            
+            success: function (respuesta) {
+                console.log(respuesta);
+                mostrarCitas(respuesta);
+            }
+        });
+    }
+
+
+
+    //   <!-- Es para mostrar los datos de mi BD en las tablas-->
+    function mostrarCitas(lista) {
+        var body = '';
+        $.each(lista, function (i, citas) {
+            body += '<tr class="table-' + ((i % 2 == 0) ? 'success' : 'light') + '">' +
+                '<td scope="row">' + citas.paciente.nombreSJLF +  '</td>' +
+                '<td scope="row">' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + '</td>' +
+                '<td scope="row">' + citas.estatus + '</td>' +
+                '<td scope="row">' + citas.fechaSJLF + ((citas.realizada == true) ? "<br> (" + citas.fechaRealizada + ")" : "") + '</td>' +
+                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');">Modificar</button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarTarea(' + citas.id + ');">Eliminar</button>   </td>' +
+                '</tr>';
+        });
+        $('#tablaCitas > tbody').html(body);
+    }
+
+    //eliminar tarea
+    function eliminarTarea(idTarea) {
+        var datos = {
+            id: idTarea
+        }
+        $.ajax({
+            url: backend + "/tareas/eliminar",
+            type: 'post',
+            datatype: 'json',
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
+            xhrFields: { withCredentials: true },
+            
+            success: function (respuesta) {
+                console.log(respuesta);
+                cargarTareas();
+                var alerta = '<div class="alert alert-dismissible alert-primary ">' +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                    ' <strong class="h5">' + respuesta + '</strong>';
+                $("#divAlertasTareas").html(alerta);
+
+                //Por 3 segundos, luego se pone null 
+                setTimeout(() => {
+                    $("#divAlertasTareas").html(null);
+                }, 3000);
+            }
+        });
+    }
+
+    //modificar tarea
+    function modificarTarea(idCita) {
+        $("#divPrincipal").load("citas/modificar.html", function () {
+            cargarCitas(idCita);
+        });
+    }
+</script>
+
+
+
+<div class="row">
+    <div class="col m-5 text-dark">
+        <h1 class="fw-bold text-center text-uppercase text-dark ">Hola, bienvenido a tu
+            gestor de citas</h1>
+
+    </div>
+</div>
+
+<div id="divMensajesCitas" class="text-center fw-bold "></div>
+
+<table class="table table-hover " id="tablaCitas">
+    <thead class=" align-items-center">
+        <tr class="table-dark ">
+            <th scope="col" class="align-middle">Paciente</th>
+            <th scope="col" class="align-middle">Médico</th>
+            <th scope="col" class="align-middle">Estatus</th>
+            <th scope="col" class="align-middle">Fecha</th>
+            <th scope="col"><button type="button" onclick=' $("#divPrincipal").load("tareas/nueva.html");'
+                    class="btn btn-success align-middle">Nueva cita </button></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+

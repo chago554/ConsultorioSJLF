@@ -1,0 +1,129 @@
+<script>
+
+    $(function () {
+        cargarPacientes();
+    });
+
+    function cargarPacientes() {
+        $.ajax({
+            url: backend + "/pacientesSJLF/listarSJLF",
+            type: 'post',
+            datatype: 'json',
+            xhrFields: { withCredentials: true },
+
+            success: function (respuesta) {
+                console.log(respuesta);
+                mostrarPacientes(respuesta);
+            }
+        });
+    }
+
+
+
+    //   <!-- Es para mostrar los datos de mi BD en las tablas-->
+    function mostrarPacientes(lista) {
+        var body = '';
+        var sangre = '';
+        $.each(lista, function (i, paciente) {
+
+            switch (paciente.tipoSangre) {
+                case 'OPositivo':
+                    sangre = 'O+';
+                    break;
+                case 'ONegativo':
+                    sangre = 'O-';
+                    break;
+                case 'APositivo':
+                    sangre = 'A+';
+                    break;
+                case 'ANegativo':
+                    sangre = 'A-';
+                    break;
+                case 'BPositivo':
+                    sangre = 'B+';
+                    break;
+                case 'BNegativo':
+                    sangre = 'B-'
+                    break;
+                case 'ABPositivo':
+                    sangre = 'AB+';
+                    break;
+                case 'ABNegativo':
+                    sangre = 'AB-';
+                    break;
+                default: sangre = 'Tipo de sangre no encontrada';
+            }
+
+            body += '<tr class="table-' + ((i % 2 == 0) ? 'success' : 'light') + '">' +
+                '<td scope="row">' + paciente.nombreSJLF + '</td>' +
+                '<td scope="row">' + paciente.curpSJLF + '</td>' +
+                '<td scope="row">' + sangre + '</td>' +
+                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarPaciente(' + paciente.id + ');">Modificar</button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarPaciente(' + paciente.id + ');">Eliminar</button>   </td>' +
+                '</tr>';
+        });
+        $('#tablaPacientes > tbody').html(body);
+    }
+
+
+
+
+
+
+    //eliminar tarea
+    function eliminarPaciente(idPaciente) {
+        var datos = {
+            id: idPaciente
+        }
+        $.ajax({
+            url: backend + "/pacientesSJLF/eliminarSJLF",
+            type: 'post',
+            datatype: 'json',
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
+            xhrFields: { withCredentials: true },
+
+            success: function (respuesta) {
+                console.log(respuesta);
+                cargarPacientes();
+                var alerta = '<div class="alert alert-dismissible alert-primary">' +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                    ' <strong class="h5">' + respuesta + '</strong>';
+                $("#divAlertas").html(alerta);
+
+                //Por 3 segundos, luego se pone null 
+                setTimeout(() => {
+                    $("#divAlertas").html(null);
+                }, 3000);
+            }
+        });
+    }
+
+
+
+
+    //modificar tarea
+    function modificarPaciente(idPaciente) {
+        $("#divPrincipal").load("Pacientes/modificar.html", function () {
+            cargarPaciente(idPaciente);
+        });
+    }
+</script>
+
+<div class="pt-5 pb-5">
+
+</div>
+
+<table class="table table-hover" id="tablaPacientes">
+    <thead class=" align-items-center">
+        <tr class="table-dark ">
+            <th scope="col" class="align-middle">Nombre</th>
+            <th scope="col" class="align-middle">CURP
+            <th scope="col" class="align-middle">Tipo de sangre</th>
+
+            <th scope="col"><button type="button" onclick=' $("#divPrincipal").load("Pacientes/nuevo.html");'
+                    class="btn btn-success align-middle">Nuevo paciente</button></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
