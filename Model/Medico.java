@@ -46,11 +46,4 @@ public class Medico {
 		this.apellidosSJLF = apellidosSJLF;
 	}
 	
-
-	
-	
-	
-	
-	
-
 }
