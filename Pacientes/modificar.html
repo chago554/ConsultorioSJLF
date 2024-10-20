@@ -23,12 +23,10 @@
         });
     }
 
-
-
     //guardar paciente
 
     function guardarPaciente() {
-        
+
         var datos = {
             nombreSJLF: $("#nombre").val(),
             curpSJLF: $("#curp").val(),
@@ -37,18 +35,31 @@
         };
 
         $.ajax({
-            url: backend + "/pacientesSJLF/guardarSJLF",
+            url: backend + "/pacientesSJLF/modificarSJLF",
             type: 'post', //es un metod post
             datatype: 'json', //se espera respuesta del server en JOSN
             data: JSON.stringify(datos),// Convierte los datos que se van a enviar al servidor en una cadena JSON
             contentType: 'application/json',//Los datos que se envían es JSON.
             xhrFields: { withCredentials: true },
 
-          
             success: function (respuesta) {
                 console.log(respuesta);
 
-                $("#divPrincipal").load("Pacientes/pacientes.html", function () {
+                if (respuesta == '¡Paciente actualizado exitosamente!') {
+
+                    $("#divPrincipal").load("Pacientes/pacientes.html", function () {
+                        var alerta = '<div class="alert alert-dismissible alert-primary ">' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                            ' <strong class="h5">' + respuesta + '</strong>';
+
+                        $("#divAlertas").html(alerta);
+                        setTimeout(() => {
+                            $("#divAlertas").html(null);
+                        }, 2000);
+                    });
+
+
+                } else {
                     var alerta = '<div class="alert alert-dismissible alert-primary ">' +
                         '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
                         ' <strong class="h5">' + respuesta + '</strong>';
@@ -57,15 +68,10 @@
                     setTimeout(() => {
                         $("#divAlertas").html(null);
                     }, 3000);
-                });
+                }
             }
         })
     }
-
-
-
-
-
 </script>
 
 
