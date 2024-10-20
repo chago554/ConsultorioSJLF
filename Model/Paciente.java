@@ -14,10 +14,13 @@ public class Paciente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
+	
 	@Column
 	String curpSJLF;
+
 	@Column
 	String nombreSJLF;
+	
 	@Column
 	TipoSangre tipoSangre;
 	
