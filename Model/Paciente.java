@@ -15,11 +15,11 @@ public class Paciente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
-	@Column(length = 18)
-	String curpSJLF;
+	@Column(length = 18, unique = true)
+	String curpSJLF = "";
 
 	@Column
-	String nombreSJLF;
+	String nombreSJLF = "";
 	
 	@Column
 	TipoSangre tipoSangre;
@@ -32,7 +32,7 @@ public class Paciente {
 		this.id = id;
 	}
 	public String getCurpSJLF() {
-		return curpSJLF;
+		return curpSJLF.toUpperCase();
 	}
 	public void setCurpSJLF(String curpSJLF) {
 		this.curpSJLF = curpSJLF;
