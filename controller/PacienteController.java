@@ -28,8 +28,18 @@ public class PacienteController {
 	//guardar
 	@PostMapping("guardarSJLF")
 	public String postCrear(@RequestBody Paciente paciente) {
+		
+		if(paciente.getCurpSJLF().length() < 18) {
+			return "La Longitud de la CURP esta incompleta";
+		}
+		
 		pacienteRepo.save(paciente);
-		return "¡Paciente guardado con exito!";
+		return "¡Paciente guardado con exito!";		
+		
+		
+	
+		
+		
 	}
 	
 	
