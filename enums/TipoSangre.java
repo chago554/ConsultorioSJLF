@@ -2,7 +2,7 @@ package com.utsem.consultorioSJLF.enums;
 
 public enum TipoSangre {
 
-	OPostivo,
+	OPositivo,
 	ONegativo,
 	APositivo,
 	ANegativo,
