@@ -18,6 +18,7 @@ public class Cita {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
+	
 	@Column
 	@JsonFormat(pattern = "HH:mm dd/MM/yyyy")
 	LocalDateTime fechaSJLF;
@@ -28,9 +29,9 @@ public class Cita {
 	//para relacionar las entidades --> muchos a uno
 	@ManyToOne
 	Paciente paciente;
+	
 	@ManyToOne
 	Medico medico;
-	
 	
 	public Long getId() {
 		return id;
@@ -62,9 +63,5 @@ public class Cita {
 	public void setMedico(Medico medico) {
 		this.medico = medico;
 	}
-	
-	
-	
-	
 	
 }
