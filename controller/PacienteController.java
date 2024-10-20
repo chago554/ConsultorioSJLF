@@ -2,6 +2,7 @@ package com.utsem.consultorioSJLF.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,37 +25,38 @@ public class PacienteController {
 	public List<Paciente> postListar() {
 		return pacienteRepo.findAll();
 	}
-	
-	//guardar
+
+	// guardar
 	@PostMapping("guardarSJLF")
 	public String postCrear(@RequestBody Paciente paciente) {
-		
-		if(paciente.getCurpSJLF().length() < 18) {
+
+		if (paciente.getNombreSJLF().isEmpty() || paciente.getCurpSJLF().isEmpty()) {
+			return "¡Por favor, rellene los campos obligatorios!";
+		}
+
+		if (paciente.getCurpSJLF().length() < 18) {
 			return "La Longitud de la CURP esta incompleta";
+		}
+	
+		if (!Pattern.matches("[a-zA-Z0-9]+", paciente.getCurpSJLF().toString())) { // valida que no se ingresen caracteres especiales
+			return "La CURP no debe de contener espacios en blanco o caracteres especiales";
 		}
 		
 		pacienteRepo.save(paciente);
-		return "¡Paciente guardado con exito!";		
-		
-		
-	
-		
-		
+		return "¡Paciente guardado con exito!";
+
 	}
-	
-	
-	//consultar a un paciente especifico
+
+	// consultar a un paciente especifico
 	@PostMapping("consultarSJLF")
 	public Paciente postMethodName(@RequestBody Paciente paciente) {
 		Optional<Paciente> elPaciente = pacienteRepo.findById(paciente.getId());
-		if(elPaciente.isPresent()) {
+		if (elPaciente.isPresent()) {
 			return elPaciente.get();
-			}
+		}
 		return new Paciente();
 	}
-	
-	
-	
+
 	// Eliminar
 	@PostMapping("eliminarSJLF")
 	public String postEliminar(@RequestBody Paciente paciente) {
@@ -65,8 +67,7 @@ public class PacienteController {
 		}
 		return "Paciente no encontrado";
 	}
-	
-	
-	//modificar --> falta
+
+	// modificar --> falta
 
 }
