@@ -33,6 +33,12 @@ public class Cita {
 	@ManyToOne
 	Medico medico;
 	
+	//se retorna un array con los todos los estatus de las citas
+	public EstatusCita [] getEstatusCita(){
+		return EstatusCita.values();
+	}
+	
+	
 	public Long getId() {
 		return id;
 	}
