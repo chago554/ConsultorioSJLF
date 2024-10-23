@@ -10,7 +10,7 @@
             type: 'post',
             datatype: 'json',
             xhrFields: { withCredentials: true },
-            
+
             success: function (respuesta) {
                 console.log(respuesta);
                 mostrarCitas(respuesta);
@@ -18,16 +18,14 @@
         });
     }
 
-
-
     //   <!-- Es para mostrar los datos de mi BD en las tablas-->
     function mostrarCitas(lista) {
         var body = '';
         $.each(lista, function (i, citas) {
             body += '<tr class="table-' + ((i % 2 == 0) ? 'success' : 'light') + '">' +
-                '<td scope="row">' + citas.paciente.nombreSJLF +  '</td>' +
+                '<td scope="row">' + citas.paciente.nombreSJLF + '</td>' +
                 '<td scope="row">' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + '</td>' +
-                '<td scope="row">' + comboEstatusCitas(citas) +'</td>' +
+                '<td scope="row">' + comboEstatusCitas(citas) + '</td>' +
                 '<td scope="row">' + citas.fechaSJLF + ((citas.realizada == true) ? "<br> (" + citas.fechaRealizada + ")" : "") + '</td>' +
                 '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');">Modificar</button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarTarea(' + citas.id + ');">Eliminar</button>   </td>' +
                 '</tr>';
@@ -36,50 +34,48 @@
     }
 
     //funcion para poner los combos de los estado de las citas
-    function comboEstatusCitas(citas){
-        var combo='<select class="form-select" onchange="cambiarEstatus(' + citas.id + ',this.value);">'
+    function comboEstatusCitas(citas) {
+        var combo = '<select class="form-select" onchange="cambiarEstatus(' + citas.id + ',this.value);">'
         $.each(citas.estatusCita, function (i, ecita) {
-            combo+='<option value="'+ecita+'" '+(citas.estatus==ecita?'selected':'')+' >'+ecita+'</option>';
+            combo += '<option value="' + ecita + '" ' + (citas.estatus == ecita ? 'selected' : '') + ' >' + ecita + '</option>';
         });
-        combo+='</select>';
+        combo += '</select>';
         return combo;
     }
 
-    //eliminar tarea
-    function eliminarTarea(idTarea) {
+    //cambiar estatus
+    function cambiarEstatus(idCita, nuevoEstatus) {
+
         var datos = {
-            id: idTarea
+            id: idCita,
+            estatus: nuevoEstatus
         }
         $.ajax({
-            url: backend + "/tareas/eliminar",
+            url: backend + "/citasSJLF/cambiarEstatusSJLF",
             type: 'post',
             datatype: 'json',
             data: JSON.stringify(datos),
             contentType: 'application/json',
             xhrFields: { withCredentials: true },
-            
+
             success: function (respuesta) {
                 console.log(respuesta);
-                cargarTareas();
+              //  mostrarCitas();
                 var alerta = '<div class="alert alert-dismissible alert-primary ">' +
                     '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
                     ' <strong class="h5">' + respuesta + '</strong>';
-                $("#divAlertasTareas").html(alerta);
+                $("#divAlertas").html(alerta);
 
                 //Por 3 segundos, luego se pone null 
                 setTimeout(() => {
-                    $("#divAlertasTareas").html(null);
+                    $("#divAlertas").html(null);
                 }, 3000);
             }
         });
     }
 
-    //modificar tarea
-    function modificarTarea(idCita) {
-        $("#divPrincipal").load("citas/modificar.html", function () {
-            cargarCitas(idCita);
-        });
-    }
+
+
 </script>
 
 
@@ -108,5 +104,3 @@
     <tbody>
     </tbody>
 </table>
-
-
