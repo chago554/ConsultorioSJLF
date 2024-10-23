@@ -2,21 +2,30 @@ package com.utsem.consultorioSJLF.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.utsem.consultorioSJLF.Model.Medico;
+import com.utsem.consultorioSJLF.repository.MedicoRepo;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
 @RequestMapping("medicosSJLF")
 public class MedicoController {
 
+	@Autowired
+	MedicoRepo medicoRepo;
 	
+	
+	//consultar
 	@PostMapping("listarSJLF")
-	public String postMethodName(@RequestBody String entity) {
-		//TODO: process POST request
-		
-		return entity;
+	public List<Medico> listarMedicos() {
+		return medicoRepo.findAll();
 	}
 	
 	
-}
+	
+	}
