@@ -27,12 +27,22 @@
             body += '<tr class="table-' + ((i % 2 == 0) ? 'success' : 'light') + '">' +
                 '<td scope="row">' + citas.paciente.nombreSJLF +  '</td>' +
                 '<td scope="row">' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + '</td>' +
-                '<td scope="row">' + citas.estatus + '</td>' +
+                '<td scope="row">' + comboEstatusCitas(citas) +'</td>' +
                 '<td scope="row">' + citas.fechaSJLF + ((citas.realizada == true) ? "<br> (" + citas.fechaRealizada + ")" : "") + '</td>' +
                 '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');">Modificar</button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarTarea(' + citas.id + ');">Eliminar</button>   </td>' +
                 '</tr>';
         });
         $('#tablaCitas > tbody').html(body);
+    }
+
+    //funcion para poner los combos de los estado de las citas
+    function comboEstatusCitas(citas){
+        var combo='<select class="form-select" onchange="cambiarEstatus(' + citas.id + ',this.value);">'
+        $.each(citas.estatusCita, function (i, ecita) {
+            combo+='<option value="'+ecita+'" '+(citas.estatus==ecita?'selected':'')+' >'+ecita+'</option>';
+        });
+        combo+='</select>';
+        return combo;
     }
 
     //eliminar tarea
@@ -91,7 +101,7 @@
             <th scope="col" class="align-middle">Médico</th>
             <th scope="col" class="align-middle">Estatus</th>
             <th scope="col" class="align-middle">Fecha</th>
-            <th scope="col"><button type="button" onclick=' $("#divPrincipal").load("tareas/nueva.html");'
+            <th scope="col"><button type="button" onclick=' $("#divPrincipal").load("cotas/nueva.html");'
                     class="btn btn-success align-middle">Nueva cita </button></th>
         </tr>
     </thead>
