@@ -26,7 +26,7 @@ public class CitasController {
 		return citasRepo.findAll();
 	}
 
-	//
+	//Actualizar el estatus de la cita
 	@PostMapping("cambiarEstatusSJLF")
 	public String cambiarEstatusSJLF(@RequestBody Cita cita) {
 		Optional<Cita> laCita = citasRepo.findById(cita.getId());
