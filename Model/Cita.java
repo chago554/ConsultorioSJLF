@@ -33,12 +33,16 @@ public class Cita {
 	@ManyToOne
 	Medico medico;
 	
+	String nuevaFechaSJLF ="";
+	String nuevaHora  ="";
+	//String nuevoMinuto="";
+	
 	//se retorna un array con los todos los estatus de las citas
 	public EstatusCita [] getEstatusCita(){
 		return EstatusCita.values();
 	}
 	
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	public LocalDateTime getFechaHTML() {
 		return fechaSJLF;
 	}
@@ -73,5 +77,22 @@ public class Cita {
 	public void setMedico(Medico medico) {
 		this.medico = medico;
 	}
+
+	public String getNuevaFechaSJLF() {
+		return nuevaFechaSJLF;
+	}
+
+	public void setNuevaFechaSJLF(String nuevaFechaSJLF) {
+		this.nuevaFechaSJLF = nuevaFechaSJLF;
+	}
+
+	public String getNuevaHora() {
+		return nuevaHora;
+	}
+
+	public void setNuevaHora(String nuevaHora) {
+		this.nuevaHora = nuevaHora;
+	}
+	
 	
 }
