@@ -38,6 +38,10 @@ public class Cita {
 		return EstatusCita.values();
 	}
 	
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	public LocalDateTime getFechaHTML() {
+		return fechaSJLF;
+	}
 	
 	public Long getId() {
 		return id;
