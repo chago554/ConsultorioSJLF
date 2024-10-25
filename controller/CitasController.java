@@ -1,5 +1,6 @@
 package com.utsem.consultorioSJLF.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class CitasController {
 		return citasRepo.findAll();
 	}
 
-	//Actualizar el estatus de la cita
+	// Actualizar el estatus de la cita
 	@PostMapping("cambiarEstatusSJLF")
 	public String cambiarEstatusSJLF(@RequestBody Cita cita) {
 		Optional<Cita> laCita = citasRepo.findById(cita.getId());
@@ -37,18 +38,19 @@ public class CitasController {
 		}
 		return "La cita no existe";
 	}
-	
-	//cambiar la fecha
+
+	// cambiar la fecha
 	@PostMapping("cambiarFechaSJLF")
 	public String cambiarFechaSJLF(@RequestBody Cita cita) {
 		Optional<Cita> laCita = citasRepo.findById(cita.getId());
 		if (laCita.isPresent()) {
-			laCita.get().setFechaSJLF(cita.getFechaSJLF());
+			laCita.get().setFechaSJLF(LocalDateTime.parse(cita.getNuevaFechaSJLF()));
 			citasRepo.save(laCita.get());
 			return "Fecha actualizada";
 		}
 		return "La cita no existe";
 	}
-	
 
+	
+	
 }
