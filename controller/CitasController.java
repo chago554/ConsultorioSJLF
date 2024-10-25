@@ -35,8 +35,20 @@ public class CitasController {
 			citasRepo.save(laCita.get());
 			return "Estatus actualizado";
 		}
-
 		return "La cita no existe";
 	}
+	
+	//cambiar la fecha
+	@PostMapping("cambiarFechaSJLF")
+	public String cambiarFechaSJLF(@RequestBody Cita cita) {
+		Optional<Cita> laCita = citasRepo.findById(cita.getId());
+		if (laCita.isPresent()) {
+			laCita.get().setFechaSJLF(cita.getFechaSJLF());
+			citasRepo.save(laCita.get());
+			return "Fecha actualizada";
+		}
+		return "La cita no existe";
+	}
+	
 
 }
