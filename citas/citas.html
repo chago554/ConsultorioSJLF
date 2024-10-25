@@ -22,11 +22,12 @@
     function mostrarCitas(lista) {
         var body = '';
         $.each(lista, function (i, citas) {
-            body += '<tr class="table-' + ((i % 2 == 0) ? 'success' : 'light') + '">' +
+            var contador = contador + 1;
+            body += '<tr class=" table-' + ((i % 2 == 0) ? 'success' : 'light') + '">' +
                 '<td scope="row">' + citas.paciente.nombreSJLF + '</td>' +
                 '<td scope="row">' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + '</td>' +
-                '<td scope="row">' + comboEstatusCitas(citas) + '</td>' +
-                '<td scope="row">' + citas.fechaSJLF + ((citas.realizada == true) ? "<br> (" + citas.fechaRealizada + ")" : "") + '</td>' +
+                '<td scope="row" class="col d-flex">' + comboEstatusCitas(citas) + ' <div id="alertaEstatus' + citas.id + '"> </div>  </td>' +
+                '<td scope="row" class="col"> <input type="datetime-local"  class="date form-control" value="' + citas.fechaHTML + '" onchange="cambiarFecha(' + citas.id + ',this.value);"><div id="alertaCitas' + citas.id + '"> </div>  </td> ' +
                 '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');">Modificar</button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarTarea(' + citas.id + ');">Eliminar</button>   </td>' +
                 '</tr>';
         });
@@ -45,7 +46,7 @@
 
     //cambiar estatus
     function cambiarEstatus(idCita, nuevoEstatus) {
-
+        var donde = "#alertaEstatus" + idCita;
         var datos = {
             id: idCita,
             estatus: nuevoEstatus
@@ -60,21 +61,43 @@
 
             success: function (respuesta) {
                 console.log(respuesta);
-              //  mostrarCitas();
-                var alerta = '<div class="alert alert-dismissible alert-primary ">' +
-                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                    ' <strong class="h5">' + respuesta + '</strong>';
-                $("#divAlertas").html(alerta);
+                var alerta = '<div class = "h1 bw-boldm text-info ps-3">✔</div>';
 
-                //Por 3 segundos, luego se pone null 
+                $(donde).html(alerta);
+
                 setTimeout(() => {
-                    $("#divAlertas").html(null);
-                }, 3000);
+                    $(donde).html(null);
+                }, 1500);
             }
         });
     }
 
+    //cambiar fecha
+    function cambiarFecha(idCita, nuevaFecha) {
+        var donde = "#alertaCitas" + idCita;
+        var datos = {
+            id: idCita,
+            nuevaFechaSJLF: nuevaFecha
+        }
+        $.ajax({
+            url: backend + "/citasSJLF/cambiarFechaSJLF ",
+            type: 'post',
+            datatype: 'json',
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
+            xhrFields: { withCredentials: true },
 
+            success: function (respuesta) {
+                console.log(respuesta);
+                var alerta = '<div class = "h1 bw-boldm text-info pe-2">✔</div>';
+                $(donde).html(alerta);
+
+                setTimeout(() => {
+                    $(donde).html(null);
+                }, 1500);
+            }
+        });
+    }
 
 </script>
 
@@ -96,9 +119,8 @@
             <th scope="col" class="align-middle">Paciente</th>
             <th scope="col" class="align-middle">Médico</th>
             <th scope="col" class="align-middle">Estatus</th>
-            <th scope="col" class="align-middle">Fecha</th>
-            <th scope="col"><button type="button" onclick=' $("#divPrincipal").load("citas/nueva.html");'
-                    class="btn btn-success align-middle">Nueva cita </button></th>
+            <th scope="col" class="align-middle ">Fecha</th>
+            <th scope="col" class="align-middle"><button type="button" onclick=' $("#divPrincipal").load("citas/nueva.html");' class="btn btn-success align-middle">Nueva cita </button></th>
         </tr>
     </thead>
     <tbody>
