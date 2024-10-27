@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script>
 
     $(function () {
@@ -55,7 +56,7 @@
                 '<td scope="row">' + paciente.nombreSJLF + '</td>' +
                 '<td scope="row">' + paciente.curpSJLF + '</td>' +
                 '<td scope="row">' + sangre + '</td>' +
-                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarPaciente(' + paciente.id + ');">Modificar</button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarPaciente(' + paciente.id + ');">Eliminar</button>   </td>' +
+                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarPaciente(' + paciente.id + ');"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarPaciente(' + paciente.id + ');"><i class="bi bi-trash3-fill"></i></button>   </td>' +
                 '</tr>';
         });
         $('#tablaPacientes > tbody').html(body);
@@ -107,7 +108,7 @@
                     <th scope="col" class="align-middle">Tipo de sangre</th>
         
                     <th scope="col"><button type="button" onclick=' $("#divPrincipal").load("Pacientes/nuevo.html");'
-                            class="btn btn-success align-middle">Nuevo paciente</button></th>
+                            class="btn btn-success align-middle">Nuevo paciente <i class="bi bi-plus-circle"></i></button></th>
                 </tr>
             </thead>
             <tbody>
