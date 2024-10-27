@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script>
 
     $(function () {
@@ -28,7 +29,7 @@
                 '<td scope="row">' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + '</td>' +
                 '<td scope="row" class="col d-flex">' + comboEstatusCitas(citas) + ' <div id="alertaEstatus' + citas.id + '"> </div>  </td>' +
                 '<td scope="row" class="col"> <input type="datetime-local"  class="date form-control" value="' + citas.fechaHTML + '" onchange="cambiarFecha(' + citas.id + ',this.value);"><div id="alertaCitas' + citas.id + '"> </div>  </td> ' +
-                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');">Modificar</button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarTarea(' + citas.id + ');">Eliminar</button>   </td>' +
+                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarTarea(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>   </td>' +
                 '</tr>';
         });
         $('#tablaCitas > tbody').html(body);
@@ -120,7 +121,7 @@
             <th scope="col" class="align-middle">Médico</th>
             <th scope="col" class="align-middle">Estatus</th>
             <th scope="col" class="align-middle ">Fecha</th>
-            <th scope="col" class="align-middle"><button type="button" onclick=' $("#divPrincipal").load("citas/nueva.html");' class="btn btn-success align-middle">Nueva cita </button></th>
+            <th scope="col" class="align-middle"><button type="button" onclick=' $("#divPrincipal").load("citas/nueva.html");' class="btn btn-success align-middle">Nueva cita <i class="bi bi-plus-circle"></i> </button></th>
         </tr>
     </thead>
     <tbody>
