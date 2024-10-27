@@ -1,5 +1,5 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script>
-
     $(function () {
         cargarMedicos();
     });
@@ -26,7 +26,7 @@
                 '<td scope="row">' + medico.cedulaSJLF + '</td>' +
                 '<td scope="row">' + medico.nombreSJLF + '</td>' +
                 '<td scope="row">' + medico.apellidosSJLF + '</td>' +
-                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarPaciente(' + medico.id + ');">Modificar</button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarPaciente(' + medico.id + ');">Eliminar</button>   </td>' +
+                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarPaciente(' + medico.id + ');"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarPaciente(' + medico.id + ');"><i class="bi bi-trash3"></i></button>   </td>' +
                 '</tr>';
         });
         $('#tablaMedico > tbody').html(body);
@@ -70,7 +70,7 @@
 <div class="row">
     <div class="col p-5">
         <table class="table table-hover" id="tablaMedico">
-            <legend class=" h1 text-dark fs-bold ">Pacientes</legend>
+            <legend class=" h1 text-dark fs-bold ">Médicos</legend>
             <thead class=" align-items-center">
                 <tr class="table-dark ">
                     <th scope="col" class="align-middle">Cédula profesional</th>
@@ -78,7 +78,7 @@
                     <th scope="col" class="align-middle">Apellidos</th>
         
                     <th scope="col"><button type="button" onclick=' $("#divPrincipal").load("Pacientes/nuevo.html");'
-                            class="btn btn-success align-middle">Nuevo médico</button></th>
+                            class="btn btn-success align-middle">Nuevo médico <i class="bi bi-plus-circle"></i></button></th>
                 </tr>
             </thead>
             <tbody>
