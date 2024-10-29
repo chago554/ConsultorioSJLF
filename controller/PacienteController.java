@@ -19,7 +19,6 @@ import com.utsem.consultorioSJLF.repository.PacienteRepo;
 @RequestMapping("pacientesSJLF")
 public class PacienteController {
 
-	private static final boolean Long = false;
 	@Autowired
 	PacienteRepo pacienteRepo;
 
