@@ -9,5 +9,4 @@ import com.utsem.consultorioSJLF.Model.Paciente;
 public interface PacienteRepo extends JpaRepository<Paciente, Long> {
 
 	Optional<Paciente> findByCurpSJLF (String curp);
-	
 }

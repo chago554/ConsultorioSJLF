@@ -31,10 +31,10 @@ public class Enfermero {
 		this.nombreSJLF = nombreSJLF;
 	}
 	public String getCurpSJLF() {
-		return curpSJLF;
+		return curpSJLF.toUpperCase();
 	}
 	public void setCurpSJLF(String curpSJLF) {
-		this.curpSJLF = curpSJLF;
+		this.curpSJLF = curpSJLF.toUpperCase();
 	}
 	
 

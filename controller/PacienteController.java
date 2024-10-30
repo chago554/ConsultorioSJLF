@@ -117,21 +117,11 @@ public class PacienteController {
 			elPaciente.get().setNombreSJLF(paciente.getNombreSJLF());
 			elPaciente.get().setCurpSJLF(paciente.getCurpSJLF());
 			elPaciente.get().setTipoSangre(paciente.getTipoSangre());
-
 			pacienteRepo.save(elPaciente.get());
 			return "¡Paciente actualizado exitosamente!";
 
 		}
 		return "El paciente NO existe";
-	}
-
-	
-	
-	// buscador 
-	@PostMapping("buscarPorNombreSJLF")
-	public List<Paciente> buscarPorNombre(@RequestBody String nombre) {
-	    List<Paciente> pacientes = pacienteRepo.findByNombreSJLFContaining(nombre);
-	    return pacientes;
 	}
 	
 	

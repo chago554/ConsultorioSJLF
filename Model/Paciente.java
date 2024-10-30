@@ -35,7 +35,7 @@ public class Paciente {
 		return curpSJLF.toUpperCase();
 	}
 	public void setCurpSJLF(String curpSJLF) {
-		this.curpSJLF = curpSJLF;
+		this.curpSJLF = curpSJLF.toUpperCase();
 	}
 	public String getNombreSJLF() {
 		return nombreSJLF;
