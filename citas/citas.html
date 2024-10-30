@@ -25,7 +25,7 @@
         $.each(lista, function (i, citas) {
             var contador = contador + 1;
             body += '<tr class=" table-' + ((i % 2 == 0) ? 'success' : 'light') + '">' +
-                '<td scope="row">' + citas.paciente.nombreSJLF + '<br>('+ citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + ') </td>' +
+                '<td scope="row">' + citas.paciente.nombreSJLF + '<br>(' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + ') </td>' +
                 '<td scope="row" class="col d-flex">' + comboEstatusCitas(citas) + ' <div id="alertaEstatus' + citas.id + '"> </div>  </td>' +
                 '<td scope="row" class="col"> <input type="datetime-local"  class="date form-control" value="' + citas.fechaHTML + '" onchange="cambiarFecha(' + citas.id + ',this.value);"><div id="alertaCitas' + citas.id + '"> </div>  </td> ' +
                 '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarTarea(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>   </td>' +
@@ -99,7 +99,7 @@
         });
     }
 
-</script> 
+</script>
 
 
 <!-- label de bienvenida -->
@@ -118,7 +118,9 @@
             <th scope="col" class="align-middle">Paciente / Médico</th>
             <th scope="col" class="align-middle">Estatus</th>
             <th scope="col" class="align-middle ">Fecha</th>
-            <th scope="col" class="align-middle"><button type="button"  data-bs-toggle="modal" data-bs-target="#nuevaCitaModal" onclick=' $("#divNuevaCita").load("citas/nueva.html");' class="btn btn-success align-middle">Agendar cita <i class="bi bi-plus-circle"></i> </button></th>
+            <th scope="col" class="align-middle"><button type="button" data-bs-toggle="modal"
+                    data-bs-target="#nuevaCitaModal" onclick=' $("#divNuevaCita").load("citas/nueva.html");'
+                    class="btn btn-success align-middle">Agendar cita <i class="bi bi-plus-circle"></i> </button></th>
         </tr>
     </thead>
     <tbody>
@@ -126,20 +128,22 @@
 </table>
 
 <!-- Modal -->
-  <div class="modal fade" id="nuevaCitaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="nuevaCitaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Nueva cita</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Nueva cita</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="divNuevaCita">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary">Nuevo paciente</button>
+                <button type="button" class="btn btn-primary">Guardar</button>
+
+            </div>
         </div>
-        <div class="modal-body" id="divNuevaCita">
-          ...
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary">Guardar</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
