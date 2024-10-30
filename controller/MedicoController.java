@@ -3,15 +3,12 @@ package com.utsem.consultorioSJLF.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.utsem.consultorioSJLF.Model.Cita;
 import com.utsem.consultorioSJLF.Model.Medico;
-import com.utsem.consultorioSJLF.Model.Paciente;
 import com.utsem.consultorioSJLF.repository.CitasRepo;
 import com.utsem.consultorioSJLF.repository.MedicoRepo;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,12 +32,16 @@ public class MedicoController {
 	// guardar
 	@PostMapping("guardarSJLF")
 	public String postCrear(@RequestBody Medico medico) {
-
+		Optional<Medico> elMedico =  medicoRepo.findByCedulaSJLF(medico.getCedulaSJLF());
+		if(elMedico.isPresent()) {
+			return "¡La cédula profesional ya existe!";
+		}
+		
 		if (medico.getCedulaSJLF().isEmpty() || medico.getNombreSJLF().isEmpty() || medico.getApellidosSJLF().isEmpty() ) {
 			return "¡Por favor, rellene los campos obligatorios!";
 		}
 		if(medico.getCedulaSJLF().length()< 8 ) {
-			return "La cédula profesional no cumple con la longitud mínima";
+			return "¡La cédula profesional no cumple con la longitud mínima!";
 		}
 		medicoRepo.save(medico);
 		return "¡Médico guardado con exito!";
@@ -91,11 +92,11 @@ public class MedicoController {
 				}
 
 				if (medico.getCedulaSJLF().length() < 8) {
-					return "La longitud de la cédula esta incompleta";
+					return "¡La longitud de la cédula esta incompleta!";
 				}
 
 				if (laCedula.isPresent() && laCedula.get().getId() != medico.getId()) {
-					return "El médico ya existe";
+					return "¡La cédula profesional ya existe!";
 				}
 
 				elMedico.get().setNombreSJLF(medico.getNombreSJLF());

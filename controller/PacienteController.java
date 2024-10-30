@@ -31,6 +31,11 @@ public class PacienteController {
 	// guardar
 	@PostMapping("guardarSJLF")
 	public String postCrear(@RequestBody Paciente paciente) {
+		Optional<Paciente> elPaciente = pacienteRepo.findByCurpSJLF(paciente.getCurpSJLF());
+		
+		if(elPaciente.isPresent()) {
+			return "¡La curp ya existe!";
+		}
 
 		if (paciente.getNombreSJLF().isEmpty() || paciente.getCurpSJLF().isEmpty()) {
 			return "¡Por favor, rellene los campos obligatorios!";
@@ -120,4 +125,16 @@ public class PacienteController {
 		return "El paciente NO existe";
 	}
 
+	
+	
+	// buscador 
+	@PostMapping("buscarPorNombreSJLF")
+	public List<Paciente> buscarPorNombre(@RequestBody String nombre) {
+	    List<Paciente> pacientes = pacienteRepo.findByNombreSJLFContaining(nombre);
+	    return pacientes;
+	}
+	
+	
+	
+	
 }
