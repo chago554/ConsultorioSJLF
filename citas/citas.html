@@ -28,7 +28,7 @@
                 '<td scope="row">' + citas.paciente.nombreSJLF + '<br>(' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + ') </td>' +
                 '<td scope="row" class="col d-flex">' + comboEstatusCitas(citas) + ' <div id="alertaEstatus' + citas.id + '"> </div>  </td>' +
                 '<td scope="row" class="col"> <input type="datetime-local"  class="date form-control" value="' + citas.fechaHTML + '" onchange="cambiarFecha(' + citas.id + ',this.value);"><div id="alertaCitas' + citas.id + '"> </div>  </td> ' +
-                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarTarea(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>   </td>' +
+                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminar(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>   </td>' +
                 '</tr>';
         });
         $('#tablaCitas > tbody').html(body);
@@ -139,9 +139,9 @@
                 ...
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary">Nuevo paciente</button>
-                <button type="button" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarCita();">Agendar cita</button>
+              
 
             </div>
         </div>
