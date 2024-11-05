@@ -19,12 +19,12 @@
             }
         });
     }
-    
-       //combo pacientes
-       function comboPaciente(lista) {
+
+    //combo pacientes
+    function comboPaciente(lista) {
         var combo = '<select class="form-select" id="comboPaciente">'
         $.each(lista, function (i, paciente) {
-            combo += '<option value=' + paciente.id + ' >' + paciente.nombreSJLF + '( '+paciente.curpSJLF +')' +  '</option>';
+            combo += '<option value=' + paciente.id + ' >' + paciente.nombreSJLF + '( ' + paciente.curpSJLF + ')' + '</option>';
         });
         combo += '</select>';
         $("#divComboPaciente").html(combo);
@@ -47,13 +47,87 @@
 
     //combo pacientes
     function comboMedicos(lista) {
-        var combo = '<select class="form-select" id="comboPaciente">'
+        var combo = '<select class="form-select" id="comboMedico">'
         $.each(lista, function (i, medico) {
-            combo += '<option value=' + medico.id + ' >' + medico.nombreSJLF +' ' + medico.apellidosSJLF+   '</option>';
+            combo += '<option value=' + medico.id + ' >' + medico.nombreSJLF + ' ' + medico.apellidosSJLF + '</option>';
         });
         combo += '</select>';
         $("#divComboMedicos").html(combo);
     }
+
+
+
+    //guadar cita
+    function guardarCita(idCita) {
+        var datos = {
+            nuevaFechaSJLF: $("#campoFecha").val(),
+            paciente: {
+                id: $("#comboPaciente").val()
+            },
+            medico: {
+                id: $("#comboMedico").val()
+            },
+
+        }
+
+
+        $.ajax({
+            url: backend + "/citasSJLF/guadarSJLF",
+            type: 'post',
+            datatype: 'json',
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
+            xhrFields: { withCredentials: true },
+
+            success: function (respuesta) {
+                console.log(respuesta);
+                $("#nuevaCitaModal").modal("hide");
+
+                if (respuesta == '¡Cita creada exitosamente!') {
+
+                    $("#divPrincipal").load("citas/citas.html", function () {
+                        var alerta = '<div class="alert alert-dismissible alert-primary ">' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                            ' <strong class="h5">' + respuesta + '</strong>';
+
+                        $("#divAlertas").html(alerta);
+
+                        setTimeout(() => {
+                            $("#divAlertas").html(null);
+                        }, 2000);
+                        
+                    });
+
+
+                } else {
+                    var alerta = '<div class="alert alert-dismissible alert-primary ">' +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                        ' <strong class="h5">' + respuesta + '</strong>';
+
+                    $("#divAlertas").html(alerta);
+                    setTimeout(() => {
+                        $("#divAlertas").html(null);
+                    }, 3000);
+                }
+
+
+
+                cargarCitas();
+            }
+        });
+    }
+
+
+
+
+
+    //fecha actual
+    function obtenerFechaHoraActual() {
+        return new Date().toISOString().slice(0, 16);
+    }
+    const fechaAhorita = obtenerFechaHoraActual();
+    document.getElementById("campoFecha").min = fechaAhorita;
+
 
 </script>
 
@@ -74,5 +148,10 @@ hola craks desde la nueva cita
             <label for="comboMedicos" class="form-label mt-4">Medico: </label>
             <div id="divComboMedicos"></div>
         </div>
+        <div>
+            <label for="comboFecha" class="form-label mt-4">Fecha: </label>
+            <input type="datetime-local" class="date form-control" id="campoFecha" min="">
+        </div>
+
     </fieldset>
 </form>
