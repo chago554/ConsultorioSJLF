@@ -27,7 +27,7 @@
             body += '<tr class=" table-' + ((i % 2 == 0) ? 'success' : 'light') + '">' +
                 '<td scope="row">' + citas.paciente.nombreSJLF + '<br>(' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + ') </td>' +
                 '<td scope="row" class="col d-flex">' + comboEstatusCitas(citas) + ' <div id="alertaEstatus' + citas.id + '"> </div>  </td>' +
-                '<td scope="row" class="col"> <input type="datetime-local"  class="date form-control" value="' + citas.fechaHTML + '" onchange="cambiarFecha(' + citas.id + ',this.value);"><div id="alertaCitas' + citas.id + '"> </div>  </td> ' +
+                '<td scope="row" class="col"> <input type="datetime-local"  class="date form-control" value="' + citas.fechaHTML + '" onchange="cambiarFecha(' + citas.id + ',this.value, this);"><div id="alertaCitas' + citas.id + '"> </div>  </td> ' +
                 '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminar(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>   </td>' +
                 '</tr>';
         });
@@ -36,7 +36,7 @@
 
     //funcion para poner los combos de los estado de las citas
     function comboEstatusCitas(citas) {
-        var combo = '<select class="form-select" onchange="cambiarEstatus(' + citas.id + ',this.value);">'
+        var combo = '<select class="form-select" onchange="cambiarEstatus(' + citas.id + ',this.value, this);">'
         $.each(citas.estatusCita, function (i, ecita) {
             combo += '<option value="' + ecita + '" ' + (citas.estatus == ecita ? 'selected' : '') + ' >' + ecita + '</option>';
         });
@@ -44,13 +44,13 @@
         return combo;
     }
 
-    //cambiar estatus
-    function cambiarEstatus(idCita, nuevoEstatus) {
-        var donde = "#alertaEstatus" + idCita;
+    // Cambiar estatus
+    function cambiarEstatus(idCita, nuevoEstatus, elemento) {
         var datos = {
             id: idCita,
             estatus: nuevoEstatus
-        }
+        };
+
         $.ajax({
             url: backend + "/citasSJLF/cambiarEstatusSJLF",
             type: 'post',
@@ -60,20 +60,35 @@
             xhrFields: { withCredentials: true },
 
             success: function (respuesta) {
-                console.log(respuesta);
-                var alerta = '<div class = "h1 bw-boldm text-info ps-3">✔</div>';
 
-                $(donde).html(alerta);
+                $(elemento).removeClass("is-invalid");
 
-                setTimeout(() => {
-                    $(donde).html(null);
-                }, 1500);
+                $.gritter.add({
+                    title: respuesta,
+                    text: respuesta,    
+                    sticky: false,
+                    image: 'correcto.png'
+                });
+
+                setTimeout(function () {
+                    $(elemento).addClass("is-valid");
+                }, 100);
+
+                setTimeout(function () {
+                    $(elemento).removeClass("is-valid");
+                }, 1000);
+            },
+
+            error: function () {
+                $(elemento).addClass("is-invalid");
             }
         });
     }
-
     //cambiar fecha
-    function cambiarFecha(idCita, nuevaFecha) {
+    function cambiarFecha(idCita, nuevaFecha, elemento) {
+
+        if(nuevaFecha!= ''){
+
         var donde = "#alertaCitas" + idCita;
         var datos = {
             id: idCita,
@@ -88,16 +103,35 @@
             xhrFields: { withCredentials: true },
 
             success: function (respuesta) {
-                console.log(respuesta);
-                var alerta = '<div class = "h1 bw-boldm text-info pe-2">✔</div>';
-                $(donde).html(alerta);
 
-                setTimeout(() => {
-                    $(donde).html(null);
-                }, 1500);
+                $(elemento).removeClass("is-invalid");
+
+                $.gritter.add({
+                    title: respuesta,
+                    text: respuesta,
+                    sticky: false,
+                    image: 'correcto.png'
+                });
+
+                setTimeout(function () {
+                    $(elemento).addClass("is-valid");
+                }, 100);
+
+                setTimeout(function () {
+                    $(elemento).removeClass("is-valid");
+                }, 1000);
+            },
+
+            error: function () {
+                $(elemento).addClass("is-invalid");
             }
+
+
         });
+    }else{
+        $(elemento).addClass("is-invalid");
     }
+}
 
 </script>
 
@@ -141,7 +175,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" onclick="guardarCita();">Agendar cita</button>
-              
+
 
             </div>
         </div>
