@@ -24,7 +24,9 @@ public class CitasController {
 	// listar
 	@PostMapping("listarSJLF")
 	public List<Cita> postListar() {
-		return citasRepo.findAll();
+		//return citasRepo.findAll();
+		
+		return citasRepo.findByOrderByFechaSJLFAsc();
 	}
 
 	// Actualizar el estatus de la cita
@@ -34,7 +36,7 @@ public class CitasController {
 		if (laCita.isPresent()) {
 			laCita.get().setEstatus(cita.getEstatus());
 			citasRepo.save(laCita.get());
-			return "Estatus actualizado";
+			return "Estatus actualizado exitosamente";
 		}
 		return "La cita no existe";
 	}
@@ -46,11 +48,27 @@ public class CitasController {
 		if (laCita.isPresent()) {
 			laCita.get().setFechaSJLF(LocalDateTime.parse(cita.getNuevaFechaSJLF()));
 			citasRepo.save(laCita.get());
-			return "Fecha actualizada";
+			return "Fecha actualizada exitosamente";
 		}
 		return "La cita no existe";
 	}
 
+	
+	// guardar cita
+	@PostMapping("guadarSJLF")
+	public String postGuadar(@RequestBody Cita cita) {
+		
+		if(cita.getNuevaFechaSJLF().contains(" ")) {
+			return "No se puede guardar una fecha en blanco	";
+		}
+		
+		cita.setFechaSJLF(LocalDateTime.parse(cita.getNuevaFechaSJLF()));
+		citasRepo.save(cita);
+
+		return "¡Cita creada exitosamente!";
+	}
+	
+	
 	
 	
 }
