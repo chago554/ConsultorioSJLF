@@ -1,5 +1,6 @@
 package com.utsem.consultorioSJLF.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.utsem.consultorioSJLF.Model.Cita;
@@ -16,5 +17,7 @@ public interface CitasRepo extends JpaRepository<Cita, Long> {
 	Optional<Cita> findByMedico(Medico medico);
 	Long countByMedico(Medico medico);
 	
+	
+	 List<Cita> findByOrderByFechaSJLFAsc();
 }
 	
