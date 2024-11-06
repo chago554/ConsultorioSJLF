@@ -9,8 +9,20 @@
     <script src="./js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="./css/bootstrap.css">
 
+    <script type="text/javascript" src="js/jquery.gritter.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/jquery.gritter.css" />
+    
     <script>
         const backend = "http://127.0.0.1:3000";
+
+        $.extend($.gritter.options, {
+            class_name: 'gritter-bolder',
+            position: 'bottom-right',
+            fade_in_speed: 500,
+            fade_out_speed: 1500,
+            time: '2000'
+          });
+
 
         function responsables() {
             $("#divPrincipal").load("responsables/responsables.html");
@@ -48,10 +60,13 @@
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                             aria-haspopup="true" aria-expanded="false">Catálogo</a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" onclick='$("#divPrincipal").load("Pacientes/pacientes.html");'>Pacientes  </a>
-                            <a class="dropdown-item" onclick='$("#divPrincipal").load("medicos/medicos.html")'>Médicos</a>
-                            <a class="dropdown-item" onclick='$("#divPrincipal").load("enfermeros/enfermeros.html")'>Enfermeros</a>
-                        
+                            <a class="dropdown-item"
+                                onclick='$("#divPrincipal").load("Pacientes/pacientes.html");'>Pacientes </a>
+                            <a class="dropdown-item"
+                                onclick='$("#divPrincipal").load("medicos/medicos.html")'>Médicos</a>
+                            <a class="dropdown-item"
+                                onclick='$("#divPrincipal").load("enfermeros/enfermeros.html")'>Enfermeros</a>
+
                         </div>
                     </li>
                 </ul>
