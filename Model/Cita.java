@@ -24,7 +24,7 @@ public class Cita {
 	LocalDateTime fechaSJLF;
 	
 	@Column
-	EstatusCita estatus;
+	EstatusCita estatus = EstatusCita.Programada;
 	
 	//para relacionar las entidades --> muchos a uno
 	@ManyToOne
@@ -32,9 +32,9 @@ public class Cita {
 	
 	@ManyToOne
 	Medico medico;
-	
+			
 	String nuevaFechaSJLF ="";
-	String nuevaHora  ="";
+
 	//String nuevoMinuto="";
 	
 	//se retorna un array con los todos los estatus de las citas
@@ -86,13 +86,5 @@ public class Cita {
 		this.nuevaFechaSJLF = nuevaFechaSJLF;
 	}
 
-	public String getNuevaHora() {
-		return nuevaHora;
-	}
-
-	public void setNuevaHora(String nuevaHora) {
-		this.nuevaHora = nuevaHora;
-	}
-	
 	
 }
