@@ -1,6 +1,9 @@
 <script>
 
     $(function () {
+
+        $('#campoFecha').val(new Date(new Date().getTime() - 6 * 60 * 60 * 1000).toISOString().slice(0, 16));
+
         cargarPacientes();
         cargarMedicos();
     });
@@ -55,8 +58,6 @@
         $("#divComboMedicos").html(combo);
     }
 
-
-
     //guadar cita
     function guardarCita(idCita) {
         var datos = {
@@ -70,7 +71,6 @@
 
         }
 
-
         $.ajax({
             url: backend + "/citasSJLF/guadarSJLF",
             type: 'post',
@@ -83,51 +83,20 @@
                 console.log(respuesta);
                 $("#nuevaCitaModal").modal("hide");
 
-                if (respuesta == '¡Cita creada exitosamente!') {
-
-                    $("#divPrincipal").load("citas/citas.html", function () {
-                        var alerta = '<div class="alert alert-dismissible alert-primary ">' +
-                            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                            ' <strong class="h5">' + respuesta + '</strong>';
-
-                        $("#divAlertas").html(alerta);
-
-                        setTimeout(() => {
-                            $("#divAlertas").html(null);
-                        }, 2000);
-                        
-                    });
-
-
-                } else {
-                    var alerta = '<div class="alert alert-dismissible alert-primary ">' +
-                        '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                        ' <strong class="h5">' + respuesta + '</strong>';
-
-                    $("#divAlertas").html(alerta);
-                    setTimeout(() => {
-                        $("#divAlertas").html(null);
-                    }, 3000);
-                }
-
-
+                $.gritter.add({
+                    title: respuesta,
+                    text: respuesta,
+                    sticky: false,
+                    image: 'correcto.png'
+                });
 
                 cargarCitas();
+
             }
+
+
         });
     }
-
-
-
-
-
-    //fecha actual
-    function obtenerFechaHoraActual() {
-        return new Date().toISOString().slice(0, 16);
-    }
-    const fechaAhorita = obtenerFechaHoraActual();
-    document.getElementById("campoFecha").min = fechaAhorita;
-
 
 </script>
 
@@ -152,6 +121,5 @@ hola craks desde la nueva cita
             <label for="comboFecha" class="form-label mt-4">Fecha: </label>
             <input type="datetime-local" class="date form-control" id="campoFecha" min="">
         </div>
-
     </fieldset>
 </form>
