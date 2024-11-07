@@ -98,6 +98,36 @@
         });
     }
 
+    //filtrar paciente
+    function buscarPacientes(texto) { //el texto de la caja de texto
+
+        if (texto != '') {
+            $.ajax({
+                url: backend + "/pacientesSJLF/filtrarPacienteSJLF",
+                type: 'post',
+                datatype: 'json',
+                data: texto,
+                contentType: 'application/json',
+
+                success: function (respuesta) {
+
+                    if (respuesta != '') {
+                        console.log(respuesta);
+                        comboPaciente(respuesta);
+                        $("#nuevoPaciente").addClass("d-none");
+
+                    } else {
+                        $("#nuevoPaciente").removeClass("d-none");
+                        comboPaciente(respuesta);
+                    }
+                }
+            });
+        }
+        else {
+            cargarPacientes();
+        }
+    }
+
 </script>
 
 hola craks desde la nueva cita
@@ -105,10 +135,17 @@ hola craks desde la nueva cita
 <form>
     <fieldset>
         <div>
-            <label for="buscarPaciente" class="form-label mt-4">Datos del paciente: </label>
-            <input type="text" class="form-control" id="buscarPaciente"
-                placeholder="Captura la información del Paciente" onkeypress="buscaPacientes(this.value)">
+            <label for="buscarPaciente" class="form-label mt-4"><i class="bi bi-search"></i> Datos del paciente:
+            </label>
+            <input type="text" class="form-control" id="buscarPaciente" placeholder="Buscar... "
+                onkeyup="buscarPacientes(this.value)">
         </div>
+
+
+        <div id="nuevoPaciente" data-bs-dismiss="modal" class="d-none row justify-content-center ps-2 pe-2">
+            <button class="btn btn-success" type="button" onclick="$( '#divPrincipal').load('Pacientes/nuevo.html ')">Nuevo paciente</button>
+        </div>
+       
         <div>
             <label for="comboPaciente" class="form-label mt-4">Paciente: </label>
             <div id="divComboPaciente"></div>
