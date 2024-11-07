@@ -5,12 +5,11 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.utsem.consultorioSJLF.Model.Cita;
 import com.utsem.consultorioSJLF.Model.Paciente;
 import com.utsem.consultorioSJLF.repository.CitasRepo;
 import com.utsem.consultorioSJLF.repository.PacienteRepo;
@@ -80,18 +79,13 @@ public class PacienteController {
 	public String postEliminar(@RequestBody Paciente paciente) {
 		Optional<Paciente> elPaciente = pacienteRepo.findById(paciente.getId());
 
-		Long citas = citasRepo.countByPaciente(paciente);
-		if (citas > 1) {
-			return "No se puede eliminar a este usuario, tiene mas de una cita";
-		}
-
-		Optional<Cita> laCita = citasRepo.findByPaciente(paciente);
 		if (elPaciente.isPresent()) {
-			if (laCita.isPresent()) {
-				return "No se puede eliminar este usuario, tiene una cita " + laCita.get().getEstatus();
+			try {
+				pacienteRepo.delete(elPaciente.get());
+				return "¡Se eliminó el paciente correctamente!";
+			} catch (DataIntegrityViolationException e) {
+				return "Este registro está conectado a otros datos, por lo que no se puede eliminar";
 			}
-			pacienteRepo.delete(elPaciente.get());
-			return "¡Se eliminó el paciente correctamente!";
 		}
 		return "No existe este usuario";
 	}
