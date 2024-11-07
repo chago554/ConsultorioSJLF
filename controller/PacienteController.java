@@ -27,7 +27,14 @@ public class PacienteController {
 	public List<Paciente> postListar() {
 		return pacienteRepo.findAll();
 	}
-
+	
+	//filtrar
+	@PostMapping("filtrarPacienteSJLF")
+	public List<Paciente> postFiltrar(@RequestBody String filtro) {
+		//return pacienteRepo.findByNombreSJLFOrCurpSJLFContains(filtro, filtro);  //esta es la manera de filtrar por nombre o curp
+		return pacienteRepo.findByNombreSJLFContains(filtro);
+	}
+	
 	// guardar
 	@PostMapping("guardarSJLF")
 	public String postCrear(@RequestBody Paciente paciente) {
