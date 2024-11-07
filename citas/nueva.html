@@ -83,18 +83,24 @@
                 console.log(respuesta);
                 $("#nuevaCitaModal").modal("hide");
 
-                $.gritter.add({
-                    title: respuesta,
-                    text: respuesta,
-                    sticky: false,
-                    image: 'correcto.png'
-                });
-
-                cargarCitas();
-
+                if(respuesta == '¡Cita creada exitosamente!'){
+                    $.gritter.add({
+                        title: "¡Listo!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'correcto.png'
+                    });
+    
+                    cargarCitas();
+                }else{
+                    $.gritter.add({
+                        title: "¡Ups, Error!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'cancelar.png'
+                    })
+                }
             }
-
-
         });
     }
 

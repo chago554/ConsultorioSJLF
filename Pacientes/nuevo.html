@@ -16,31 +16,23 @@
       xhrFields: { withCredentials: true },
 
       success: function (respuesta) {
-        console.log(respuesta);
-
         if (respuesta == '¡Paciente guardado con exito!') {
 
-          $("#divPrincipal").load("Pacientes/pacientes.html", function () {
-            var alerta = '<div class="alert alert-dismissible alert-primary ">' +
-              '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-              ' <strong class="h5">' + respuesta + '</strong>';
-
-            $("#divAlertas").html(alerta);
-            setTimeout(() => {
-              $("#divAlertas").html(null);
-            }, 2000);
+          $("#divPrincipal").load("Pacientes/pacientes.html");
+          $.gritter.add({
+            title: "¡Listo!",
+            text: respuesta,
+            sticky: false,
+            image: 'correcto.png'
           });
 
-
         } else {
-          var alerta = '<div class="alert alert-dismissible alert-primary ">' +
-            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-            ' <strong class="h5">' + respuesta + '</strong>';
-
-          $("#divAlertas").html(alerta);
-          setTimeout(() => {
-            $("#divAlertas").html(null);
-          }, 3000);
+          $.gritter.add({
+            title: "¡Ups, Error!",
+            text: respuesta,
+            sticky: false,
+            image: 'cancelar.png'
+          })
         }
       }
     })
@@ -53,13 +45,13 @@
       <div>
         <legend class="h1">Guardar un nuevo paciente</legend>
         <fieldset>
-          <label class="form-label text-dark fw-bold" for="nombre">Nombre(s)</label>
+          <label class="form-label text-dark fw-bold" for="nombre">Nombre(s)*</label>
           <input class="form-control" required id="nombre" type="text" placeholder="Proporcione su nombre">
         </fieldset>
       </div>
       <div>
         <fieldset>
-          <label class="form-label mt-4 text-dark fw-bold" for="curp">CURP</label>
+          <label class="form-label mt-4 text-dark fw-bold" for="curp">CURP*</label>
           <input class="form-control" required id="curp" type="text" minlength="18" maxlength="18"
             placeholder="Ingrese su CURP">
         </fieldset>
@@ -80,7 +72,8 @@
         </fieldset>
       </div>
       <div class="form-control">
-        <button class="btn btn-dark " onclick='$("#divPrincipal").load("Pacientes/pacientes.html")'><i class="bi bi-arrow-bar-left"></i>Regresar</button>
+        <button class="btn btn-dark " onclick='$("#divPrincipal").load("Pacientes/pacientes.html")'><i
+            class="bi bi-arrow-bar-left"></i>Regresar</button>
         <button class="btn btn-info" onclick='guardarPaciente()'><i class="bi bi-floppy"></i> Guardar</button>
       </div>
     </form>

@@ -13,7 +13,6 @@
             xhrFields: { withCredentials: true },
 
             success: function (respuesta) {
-                console.log(respuesta);
                 mostrarPacientes(respuesta);
             }
         });
@@ -76,15 +75,25 @@
             xhrFields: { withCredentials: true },
 
             success: function (respuesta) {
-                console.log(respuesta);
-                cargarPacientes();
-                var alerta = '<div class="alert alert-dismissible alert-primary">' +
-                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                    ' <strong class="h5">' + respuesta + '</strong>';
-                $("#divAlertas").html(alerta);
-                setTimeout(() => {
-                    $("#divAlertas").html(null);
-                }, 3000);
+
+                if(respuesta == '¡Se eliminó el paciente correctamente!'){
+                    $.gritter.add({
+                        title: "¡Listo!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'correcto.png'
+                    }); cargarPacientes();
+
+                }else{
+
+                    $.gritter.add({
+                        title: "¡Ups, Error!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'cancelar.png'
+                    })
+                }
+            
             }
         });
     }

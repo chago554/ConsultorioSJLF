@@ -13,34 +13,26 @@
       data: JSON.stringify(datos),// Convierte los datos que se van a enviar al servidor en una cadena JSON
       contentType: 'application/json',//Los datos que se envían es JSON.
       xhrFields: { withCredentials: true },
-      success: function (respuesta) {
-        console.log(respuesta);
 
+      success: function (respuesta) {
         if (respuesta == '¡Enfermero guardado con exito!') {
 
-            $("#divPrincipal").load("enfermeros/enfermeros.html", function () {
-                var alerta = '<div class="alert alert-dismissible alert-primary ">' +
-                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                    ' <strong class="h5">' + respuesta + '</strong>';
-
-                $("#divAlertas").html(alerta);
-                setTimeout(() => {
-                    $("#divAlertas").html(null);
-                }, 2000);
-            });
-
-
+          $.gritter.add({
+            title: "¡Listo!",
+            text: respuesta,
+            sticky: false,
+            image: 'correcto.png'
+          });
+          $("#divPrincipal").load("enfermeros/enfermeros.html");
         } else {
-            var alerta = '<div class="alert alert-dismissible alert-primary ">' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                ' <strong class="h5">' + respuesta + '</strong>';
-
-            $("#divAlertas").html(alerta);
-            setTimeout(() => {
-                $("#divAlertas").html(null);
-            }, 3000);
+          $.gritter.add({
+            title: "¡Ups, Error!",
+            text: respuesta,
+            sticky: false,
+            image: 'cancelar.png'
+          })
         }
-    }
+      }
     })
   }
 </script>
@@ -63,9 +55,10 @@
             placeholder="Ingrese su CURP">
         </fieldset>
       </div>
-    
+
       <div class="form-control">
-        <button class="btn btn-dark " onclick='$("#divPrincipal").load("enfermeros/enfermeros.html")'><i class="bi bi-arrow-bar-left"></i>Regresar</button>
+        <button class="btn btn-dark " onclick='$("#divPrincipal").load("enfermeros/enfermeros.html")'><i
+            class="bi bi-arrow-bar-left"></i>Regresar</button>
         <button class="btn btn-info" onclick='guardarEnfermero()'><i class="bi bi-floppy"></i> Guardar</button>
       </div>
     </form>

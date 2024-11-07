@@ -16,13 +16,12 @@
             success: function (respuesta) {
                 console.log(respuesta);
                 $("#nombre").val(respuesta.nombreSJLF),
-                $("#cedulaProfesional").val(respuesta.cedulaSJLF),
-                $("#apellidos").val(respuesta.apellidosSJLF)
+                    $("#cedulaProfesional").val(respuesta.cedulaSJLF),
+                    $("#apellidos").val(respuesta.apellidosSJLF)
                 $("#idMedico").val(respuesta.id)
-                }
+            }
         });
     }
-
 
     //guardar 
     function guadarMedico() {
@@ -42,31 +41,24 @@
             xhrFields: { withCredentials: true },
 
             success: function (respuesta) {
-                console.log(respuesta);
-
                 if (respuesta == '¡Médico actualizado exitosamente!') {
 
-                    $("#divPrincipal").load("medicos/medicos.html", function () {
-                        var alerta = '<div class="alert alert-dismissible alert-primary ">' +
-                            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                            ' <strong class="h5">' + respuesta + '</strong>';
-
-                        $("#divAlertas").html(alerta);
-                        setTimeout(() => {
-                            $("#divAlertas").html(null);
-                        }, 2000);
+                    $.gritter.add({
+                        title: "¡Listo!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'correcto.png'
                     });
-
+                    $("#divPrincipal").load("medicos/medicos.html");
 
                 } else {
-                    var alerta = '<div class="alert alert-dismissible alert-primary ">' +
-                        '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                        ' <strong class="h5">' + respuesta + '</strong>';
 
-                    $("#divAlertas").html(alerta);
-                    setTimeout(() => {
-                        $("#divAlertas").html(null);
-                    }, 3000);
+                    $.gritter.add({
+                        title: "¡Ups, Error!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'cancelar.png'
+                    })
                 }
             }
         })
