@@ -34,8 +34,6 @@ public class Cita {
 	Medico medico;
 			
 	String nuevaFechaSJLF ="";
-
-	//String nuevoMinuto="";
 	
 	//se retorna un array con los todos los estatus de las citas
 	public EstatusCita [] getEstatusCita(){
