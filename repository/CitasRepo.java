@@ -7,5 +7,4 @@ import com.utsem.consultorioSJLF.Model.Cita;
 
 public interface CitasRepo extends JpaRepository<Cita, Long> {
 	List<Cita> findByOrderByFechaSJLFAsc();
-	
 }
