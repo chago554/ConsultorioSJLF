@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-//import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,11 +23,35 @@ public class CitasController {
 
 	// listar
 	@PostMapping("listarSJLF")
-	public List<Cita> postListar() {	
+	public List<Cita> postListar() {
 		return citasRepo.findByOrderByFechaSJLFAsc();
 	}
 
-	
+	// cargar cita
+	@PostMapping("cargarCitaSJLF")
+	public Cita postMethodName(@RequestBody Long id) {
+		Optional<Cita> laCita = citasRepo.findById(id);
+		if (laCita.isPresent()) {
+			return laCita.get();
+		}
+		return new Cita();
+	}
+
+	// eliminar
+	@PostMapping("eliminarSJLF")
+	public String eliminarCita(@RequestBody Cita cita) {
+		Optional<Cita> laCita = citasRepo.findById(cita.getId());
+		if (laCita.isPresent()) {
+			try {
+				citasRepo.delete(laCita.get());
+				return "¡Se eliminó la cita exitosamente!";
+			} catch (DataIntegrityViolationException e) {
+				return "Este registro está conectado a otros datos, por lo que no se puede eliminar";
+			}
+		}
+		return "¡No existe este médico!";
+	}
+
 	// Actualizar el estatus de la cita
 	@PostMapping("cambiarEstatusSJLF")
 	public String cambiarEstatusSJLF(@RequestBody Cita cita) {
@@ -52,22 +76,18 @@ public class CitasController {
 		return "¡La cita no existe!";
 	}
 
-	
 	// guardar cita
 	@PostMapping("guadarSJLF")
 	public String postGuadar(@RequestBody Cita cita) {
-		
-		if(cita.getNuevaFechaSJLF().contains(" ")) {
+
+		if (cita.getNuevaFechaSJLF().contains(" ")) {
 			return "¡No se puede guardar una fecha en blanco!";
 		}
-		
+
 		cita.setFechaSJLF(LocalDateTime.parse(cita.getNuevaFechaSJLF()));
 		citasRepo.save(cita);
 
 		return "¡Cita creada exitosamente!";
 	}
-	
-	
-	
-	
+
 }
