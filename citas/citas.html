@@ -28,7 +28,7 @@
                 '<td scope="row">' + citas.paciente.nombreSJLF + '<br>(' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + ') </td>' +
                 '<td scope="row" class="col d-flex">' + comboEstatusCitas(citas) + ' <div id="alertaEstatus' + citas.id + '"> </div>  </td>' +
                 '<td scope="row" class="col"> <input type="datetime-local" class="date form-control"  value="' + citas.fechaHTML + '" onchange="cambiarFecha(' + citas.id + ',this.value, this);"><div id="alertaCitas' + citas.id + '"> </div>  </td> ' +
-                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarTarea(' + citas.id + ');"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminar(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>   </td>' +
+                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarCita(' + citas.id + ');"  data-bs-toggle="modal" data-bs-target="#modificarCitaModal"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarCita(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>  <button type="button" class=" btn btn-dark " onclick="iniciarConsulta(' + citas.id + ');"  data-bs-toggle="modal" data-bs-target="#nuevaConsultaModal"> <i class="bi bi-heart-pulse"></i>  </button>   </td>' +
                 '</tr>';
         });
         $('#tablaCitas > tbody').html(body);
@@ -134,6 +134,62 @@
         }
     }
 
+    //iniciar Consulta
+    function iniciarConsulta(idCita) {
+        $("#divNuevaConsulta").load("consulta/concita.html", function () {
+            cargarCita(idCita);
+        });
+    }
+
+
+    //eliminarCita
+    function eliminarCita(idCita) {
+        var datos = {
+            id: idCita
+        }
+
+        $.ajax({
+            url: backend + "/citasSJLF/eliminarSJLF",
+            type: 'post',
+            datatype: 'json',
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
+            xhrFields: { withCredentials: true },
+
+
+
+            success: function (respuesta) {
+
+                if (respuesta == '¡Se eliminó la cita exitosamente!') {
+                    $.gritter.add({
+                        title: "¡Listo!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'correcto.png'
+                    }); cargarCitas();
+
+                } else {
+
+                    $.gritter.add({
+                        title: "¡Ups, Error!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'cancelar.png'
+                    })
+                }
+
+            }
+
+        });
+    }
+
+    //modificar cita
+    function modificarCita(idCita) {
+        $("#divModificarCita").load("citas/modificar.html", function (){
+            buscarPaciente(idCita);
+        });
+    }
+
 </script>
 
 
@@ -162,7 +218,8 @@
     </tbody>
 </table>
 
-<!-- Modal -->
+
+<!-- Modal nueva cita -->
 <div class="modal fade" id="nuevaCitaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -176,6 +233,46 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" onclick="guardarCita();">Agendar cita</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal tomar signos-->
+<div class="modal fade" id="nuevaConsultaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Toma de signos</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="divNuevaConsulta">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarSignos();">Guardar signos </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal modificar cita-->
+<div class="modal fade" id="modificarCitaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modificar cita</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="divModificarCita">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="crearConsulta();">Actualizar </button>
             </div>
         </div>
     </div>
