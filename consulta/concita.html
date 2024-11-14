@@ -1,0 +1,127 @@
+<script>
+    $(function () {
+        cargarEnfermero();
+    });
+
+    //cargar enfermeros
+    function cargarEnfermero() {
+        $.ajax({
+            url: backend + "/enfermerosSJLF/listarSJLF",
+            type: 'post',
+            datatype: 'json',
+            xhrFields: { withCredentials: true },
+
+            success: function (respuesta) {
+                console.log(respuesta);
+                comboEnfermero(respuesta);
+            }
+        });
+    }
+    //combo enfermeros
+    function comboEnfermero(lista) {
+        var combo = '<select class="form-select" id="comboEnfermero">'
+        $.each(lista, function (i, enfermero) {
+            combo += '<option value=' + enfermero.id + ' >' + enfermero.nombreSJLF + '</option>';
+        });
+        combo += '</select>';
+        $("#divComboEnfermero").html(combo);
+    }
+
+
+    //cargar consulta
+    function cargarCita(idCita) {
+
+        $.ajax({
+            url: backend + "/citasSJLF/cargarCitaSJLF",
+            type: 'post',
+            datatype: 'json',
+            data: JSON.stringify(idCita),
+            contentType: 'application/json',
+            xhrFields: { withCredentials: true },
+
+            success: function (respuesta) {
+                $("#staticNombre").val(respuesta.paciente.nombreSJLF);
+                $("#staticMedico").val(respuesta.medico.nombreSJLF + " " + respuesta.medico.apellidosSJLF);
+                $("#campoPaciente").val(respuesta.paciente.id);
+                $("#campoMedico").val(respuesta.medico.id);
+
+            }
+
+        });
+    }
+    //crear consulta
+    function crearConsulta(){
+
+    }
+
+</script>
+<form>
+    <fieldset>
+        <input type="hidden" id="campoPaciente">
+        <input type="hidden" id="campoMedico">
+
+
+        <div class="row pt-0">
+            <label for="staticNombre" class="col-sm-2 col-form-label fw-bold">Paciente:</label>
+            <div class="col-sm-10">
+                <input type="text" readonly="" class="form-control" id="staticNombre">
+            </div>
+        </div>
+
+        <div class="row pt-0">
+            <label for="staticMedico" class="col-sm-2 col fw-bold">Médico</label>
+            <div class="col-sm-10">
+                <input type="text" readonly="" class="form-control" id="staticMedico">
+            </div>
+        </div>
+
+        <div class="mt-0">
+            <label for="comboEnfermero" class="form-label mt-4 fw-bold">Enfermero: </label>
+            <div id="divComboEnfermero"></div>
+        </div>
+        <!-- peso -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Peso: </label>
+            <input type="number" class="form-control col" id="campoPeso">
+        </div>
+
+        <!-- altura -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Altura: </label>
+            <input type="number" class="form-control col" id="campoAltura">
+        </div>
+
+        <!-- presion arterial -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Presion arterial: </label>
+            <div class="d-flex" >
+                <input type="number" class="form-control col " id="campoSistole">
+                <input type="number" class="form-control col ms-2" id="campoDiastole">
+            </div>
+        </div>
+
+        <!-- temperatura -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Temperatura: </label>
+            <input type="number" class="form-control col" id="campoTemperatura">
+        </div>
+
+        <!-- oxigeno -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Saturación de oxigeno: </label>
+            <input type="number" class="form-control col" id="campoOxigeno">
+        </div>
+
+        <!-- Frecuencia cardiaca -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Frecuencia cardíaca: </label>
+            <input type="number" class="form-control col" id="campoCardiaca">
+        </div>
+
+        <!-- sintomas -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Sintomas: </label>
+            <textarea class="form-control" aria-label="With textarea" id="campoSintomas"></textarea>
+        </div>
+    </fieldset>
+</form>
