@@ -89,5 +89,30 @@ public class CitasController {
 
 		return "¡Cita creada exitosamente!";
 	}
+	
+	//modificar paciente
+	@PostMapping("modificarPacienteSJLF")
+	public String cambiarPaciente(@RequestBody Cita cita) {
+		Optional<Cita> laCita = citasRepo.findById(cita.getId());
+		if (laCita.isPresent()) {
+			laCita.get().setPaciente(cita.getPaciente());
+			citasRepo.save(laCita.get());
+			return "¡Paciente actualizado correctamente!";
+		}
+		return "No hay una cita ";
+	}
+	
+	
+	// modificar medico
+	@PostMapping("modificarMedicoSJLF")
+	public String cambiarMedico(@RequestBody Cita cita) {
+		Optional<Cita> laCita = citasRepo.findById(cita.getId());
+		if (laCita.isPresent()) {
+			laCita.get().setMedico(cita.getMedico());
+			citasRepo.save(laCita.get());
+			return "¡Médico actulizado correctamente!";
+		}
+		return "No hay una cita ";
+	}
 
 }
