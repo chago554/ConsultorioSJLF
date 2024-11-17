@@ -61,7 +61,7 @@ public class Consulta {
 	@Column
 	String sintomasSJLF;
 	@Column
-	String observacionesSJLF;
+	String observacionesSJLF = ""	;
 	@Column
 	EstatusConsulta estatusConsulta = EstatusConsulta.Esperando;
 	
@@ -168,12 +168,4 @@ public class Consulta {
 	public void setEstatusConsulta(EstatusConsulta estatusConsulta) {
 		this.estatusConsulta = estatusConsulta;
 	}
-
-	
-	
-	
-	
-	
-	
-	
 }
