@@ -28,7 +28,7 @@
                 '<td scope="row">' + citas.paciente.nombreSJLF + '<br>(' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + ') </td>' +
                 '<td scope="row" class="col d-flex">' + comboEstatusCitas(citas) + ' <div id="alertaEstatus' + citas.id + '"> </div>  </td>' +
                 '<td scope="row" class="col"> <input type="datetime-local" class="date form-control"  value="' + citas.fechaHTML + '" onchange="cambiarFecha(' + citas.id + ',this.value, this);"><div id="alertaCitas' + citas.id + '"> </div>  </td> ' +
-                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarCita(' + citas.id + ');"  data-bs-toggle="modal" data-bs-target="#modificarCitaModal"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarCita(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>  <button type="button" class=" btn btn-dark " onclick="iniciarConsulta(' + citas.id + ');"  data-bs-toggle="modal" data-bs-target="#nuevaConsultaModal"> <i class="bi bi-heart-pulse"></i>  </button>   </td>' +
+                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarCita(' + citas.id + ', this.value);"  data-bs-toggle="modal" data-bs-target="#modificarCitaModal"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarCita(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>  <button type="button" class=" btn btn-dark " onclick="iniciarConsulta(' + citas.id + ');"  data-bs-toggle="modal" data-bs-target="#nuevaConsultaModal"> <i class="bi bi-heart-pulse"></i>  </button>   </td>' +
                 '</tr>';
         });
         $('#tablaCitas > tbody').html(body);
@@ -141,7 +141,6 @@
         });
     }
 
-
     //eliminarCita
     function eliminarCita(idCita) {
         var datos = {
@@ -185,10 +184,151 @@
 
     //modificar cita
     function modificarCita(idCita) {
-        $("#divModificarCita").load("citas/modificar.html", function (){
-            buscarPaciente(idCita);
+        $("#divModificarCita").load('citas/modificar.html', function () {
+            buscarCita(idCita);
         });
     }
+
+    //buscar cita
+    function buscarCita(idCita) {
+        var datos = idCita;
+
+        $.ajax({
+            url: backend + "/citasSJLF/cargarCitaSJLF",
+            type: 'post',
+            datatype: 'json',
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
+            xhrFields: { withCredentials: true },
+
+            success: function (respuesta) {
+                cargarPacientes(respuesta.paciente.id, idCita);
+                cargarMedicos(respuesta.medico.id, idCita);
+            }
+        });
+    }
+
+    //cargar pacientes
+    function cargarPacientes(idPaciente, idCita) {
+        $.ajax({
+            url: backend + "/pacientesSJLF/listarSJLF",
+            type: 'post',
+            datatype: 'json',
+            xhrFields: { withCredentials: true },
+            success: function (respuesta) {
+                comboPaciente(respuesta, idPaciente, idCita);
+            }
+        });
+    }
+
+    //cargar medicos
+    function cargarMedicos(idMedico, idCita) {
+        $.ajax({
+            url: backend + "/medicosSJLF/listarSJLF",
+            type: 'post',
+            datatype: 'json',
+            xhrFields: { withCredentials: true },
+            success: function (respuesta) {
+                comboMedicos(respuesta, idMedico, idCita);
+            }
+        });
+    }
+
+
+    //combo pacientes
+    function comboPaciente(lista, idPaciente, idCita) {
+        var combo = '<select class="form-select" id="comboPaciente"  onchange="actualizarPaciente(this.value, ' + idCita + ');">'
+        $.each(lista, function (i, paciente) {
+            combo += '<option ' + ((paciente.id == idPaciente) ? 'selected' : 'value= "' + paciente.id + '"') + '>' + paciente.nombreSJLF + '( ' + paciente.curpSJLF + ')' + '</option>';
+        });
+        combo += '</select>';
+        $("#divPacienteCombo").html(combo);
+    }
+
+    //combo medicos
+    function comboMedicos(lista, idMedico, idCita) {
+        var combo = '<select class="form-select" id="comboMedico" onchange="actualizarMedico(this.value, ' + idCita + ');" >'
+        $.each(lista, function (i, medico) {
+            combo += '<option ' + ((medico.id == idMedico) ? 'selected' : 'value= "' + medico.id + '"') + ' >' + medico.nombreSJLF + ' ' + medico.apellidosSJLF + '</option>';
+        });
+        combo += '</select>';
+        $("#divComboMedicos").html(combo);
+    }
+
+
+    //actualizar pacientes
+    function actualizarPaciente(idPaciente, idCita) {
+        var datos = {
+            id: idCita,
+            paciente: {
+                id: idPaciente
+            }
+        }
+        $.ajax({
+            url: backend + "/citasSJLF/modificarPacienteSJLF",
+            type: 'post',
+            datatype: 'json',
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
+            xhrFields: { withCredentials: true },
+            success: function (respuesta) {
+                if (respuesta == '¡Paciente actualizado correctamente!') {
+                    $.gritter.add({
+                        title: "¡Listo!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'correcto.png'
+                    });
+
+                } else {
+                    $.gritter.add({
+                        title: "¡Ups, Error!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'cancelar.png'
+                    })
+                }
+            }
+        });
+    }
+
+    //actualizar medico
+    function actualizarMedico(idMedico, idCita) {
+        var datos = {
+            id: idCita,
+            medico: {
+                id: idMedico
+            }
+        }
+        $.ajax({
+            url: backend + "/citasSJLF/modificarMedicoSJLF",
+            type: 'post',
+            datatype: 'json',
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
+            xhrFields: { withCredentials: true },
+
+            success: function (respuesta) {
+                if (respuesta == '¡Médico actulizado correctamente!') {
+                    $.gritter.add({
+                        title: "¡Listo!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'correcto.png'
+                    });
+                } else {
+                    $.gritter.add({
+                        title: "¡Ups, Error!",
+                        text: respuesta,
+                        sticky: false,
+                        image: 'cancelar.png'
+                    })
+                }
+
+            }
+        });
+    }
+
 
 </script>
 
@@ -252,7 +392,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button  type="submit" class="btn btn-primary" onclick="crearConsulta();">Guardar signos </button>
+                <button type="submit" class="btn btn-primary" onclick="crearConsulta();">Guardar signos </button>
             </div>
         </div>
     </div>
@@ -263,16 +403,16 @@
 <div class="modal fade" id="modificarCitaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header pb-0">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Modificar cita</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="divModificarCita">
-                ...
+            <div class="modal-body pt-0 " id="divModificarCita">
+
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="crearConsulta();">Actualizar </button>
+                <button type="button" onclick="$('#divPrincipal').load('citas/citas.html') " class="btn btn-primary"
+                    data-bs-dismiss="modal">Volver</button>
             </div>
         </div>
     </div>
