@@ -26,8 +26,6 @@
         combo += '</select>';
         $("#divComboEnfermero").html(combo);
     }
-
-
     //cargar consulta
     function cargarCita(idCita) {
 
@@ -86,7 +84,6 @@
 
                 success: function (respuesta) {
                     console.log(respuesta);
-                  
 
                     if (respuesta == '¡Cita creada exitosamente!') {
                         $("#nuevaConsultaModal").modal("hide");
@@ -113,7 +110,7 @@
 
     //crear consulta
     function crearConsulta() {
-       $("#formNuevaConsulta").submit()
+        $("#formNuevaConsulta").submit()
     }
 
 </script>
@@ -144,7 +141,8 @@
         <!-- peso -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Peso: </label>
-            <input type="number" class="form-control col required" id="campoPeso" placeholder="Ingrese el peso en Kg" required name="peso">
+            <input type="number" class="form-control col required" id="campoPeso" placeholder="Ingrese el peso en Kg"
+                required name="peso">
         </div>
 
         <!-- altura -->
