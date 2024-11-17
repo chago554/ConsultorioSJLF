@@ -1,77 +1,17 @@
 <script>
 
-  function buscarPaciente(idCita) {
-    //hacer una consulta a la bd para obtner la consulta
-    $.ajax({
-      url: backend + "/pacientesSJLF/listarSJLF",
-      type: 'post',
-      datatype: 'json',
-      data: JSON.stringify(idCita),
-      contentType: 'application/json',
-      xhrFields: { withCredentials: true },
-
-      success: function (respuesta) {
-        console.log(respuesta);
-        comboPaciente(respuesta);
-        buscarMedico(respuesta);
-      }
-    });
-  }
-
-  //combo pacientes
-  function comboPaciente(lista) {
-    var combo = '<select class="form-select" id="pacienteCombo">'
-    $.each(lista, function (i, paciente, elemento) {
-      combo += '<option '+ (paciente.id == elemento)  +' value=' + paciente.id + ' >' + paciente.nombreSJLF + '( ' + paciente.curpSJLF + ')' + '</option>';
-    });
-
-    //selected
-
-    //  body += '<tr class=" table-' + ((i % 2 == 0) ? 'success' : 'light') + '">' +
-
-    combo += '</select>';
-    $("#divPacienteCombo").html(combo);
-  }
-
-
-  function buscarMedico(idCita){
-    $.ajax({
-      url: backend + "/medicosSJLF/listarSJLF",
-      type: 'post',
-      datatype: 'json',
-      data: JSON.stringify(idCita),
-      contentType: 'application/json',
-      xhrFields: { withCredentials: true },
-
-      success: function (respuesta) {
-        console.log(respuesta);
-        comboMedicos(respuesta);
-      }
-    });
-  }
-
-    //combo pacientes
-    function comboMedicos(lista) {
-      var combo = '<select class="form-select" id="medicoCombo">'
-      $.each(lista, function (i, medico) {
-        combo += '<option value=' + medico.id + ' >' + medico.nombreSJLF  + medico.apellidosSJLF  + '</option>';
-      });
-      combo += '</select>';
-      $("#divComboMedicos").html(combo);
-    }
-
+  $(function () {
+    cargarPacientes();
+    cargarMedicos();
+  });
 
 </script>
 
-<div class="col">
-
-  <div>
-    <label for="divPacienteCombo" class="form-label mt-4">Paciente: </label>
-    <div id="divPacienteCombo"></div>
-  </div>
-  <div>
-    <label for="divComboMedicos" class="form-label mt-4">Medico: </label>
-    <div id="divComboMedicos"></div>
-  </div>
-
+<div class="pt-0">
+  <label for="divPacienteCombo" class="form-label mt-4">Paciente: </label>
+  <div id="divPacienteCombo"></div>
+</div>
+<div>
+  <label for="divComboMedicos" class="form-label mt-4">Medico: </label>
+  <div id="divComboMedicos"></div>
 </div>
