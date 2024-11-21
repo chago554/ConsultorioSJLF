@@ -50,7 +50,7 @@
     //validar datos del form
 
     $("#formNuevaConsulta").validate({
-        submitHandler: function (form) {
+        submitHandler: function () {
             console.log("Campo personalizado");
 
             var datos = {
@@ -148,42 +148,42 @@
         <!-- altura -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Altura: </label>
-            <input type="number" class="form-control col" id="campoAltura" placeholder="Ingrese la altura" required>
+            <input type="number" class="form-control col" id="campoAltura" name="campoAltura" placeholder="Ingrese la altura" required>
         </div>
 
         <!-- presion arterial -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Presion arterial: </label>
             <div class="d-flex">
-                <input type="number" class="form-control col " id="campoSistole" placeholder="Sístole" required>
-                <input type="number" class="form-control col ms-2" id="campoDiastole" placeholder="Diástole" required>
+                <input type="number" class="form-control col " id="campoSistole"  name="campoSistole" placeholder="Sístole" required>
+                <input type="number" class="form-control col ms-2" id="campoDiastole" name="campoDiastole" placeholder="Diástole" required>
             </div>
         </div>
 
         <!-- temperatura -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Temperatura: </label>
-            <input type="number" class="form-control col" id="campoTemperatura" placeholder="Ingrese temperatura en °C"
+            <input type="number" class="form-control col" id="campoTemperatura" name="campoTemperatura" placeholder="Ingrese temperatura en °C"
                 required>
         </div>
 
         <!-- oxigeno -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Saturación de oxigeno: </label>
-            <input type="number" class="form-control col" id="campoOxigeno" placeholder="Ingrese el oxigeno" required>
+            <input type="number" class="form-control col" id="campoOxigeno" name="campoOxigeno" placeholder="Ingrese el oxigeno" required>
         </div>
 
         <!-- Frecuencia cardiaca -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Frecuencia cardíaca: </label>
-            <input type="number" class="form-control col" id="campoCardiaca"
+            <input type="number" class="form-control col" id="campoCardiaca" name="campoCardiaca"
                 placeholder="Ingrese la frecuencia cardiaca" required>
         </div>
 
         <!-- sintomas -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Sintomas: </label>
-            <textarea class="form-control" aria-label="With textarea" id="campoSintomas"
+            <textarea class="form-control" aria-label="With textarea" id="campoSintomas" name="campoSintomas"
                 placeholder="Redacte los sintomas..." required></textarea>
         </div>
     </fieldset>
