@@ -42,14 +42,13 @@
                 $("#staticMedico").val(respuesta.medico.nombreSJLF + " " + respuesta.medico.apellidosSJLF);
                 $("#campoPaciente").val(respuesta.paciente.id);
                 $("#campoMedico").val(respuesta.medico.id);
-
+                $("#campoCita").val(idCita);
             }
 
         });
     }
     //validar datos del form
-
-    $("#formNuevaConsulta").validate({
+    $("#formNuevaConsulta").validate ({
         submitHandler: function () {
             console.log("Campo personalizado");
 
@@ -85,7 +84,7 @@
                 success: function (respuesta) {
                     console.log(respuesta);
 
-                    if (respuesta == '¡Cita creada exitosamente!') {
+                    if (respuesta == '¡Consulta creada exitosamente!') {
                         $("#nuevaConsultaModal").modal("hide");
                         $.gritter.add({
                             title: "¡Listo!",
@@ -93,7 +92,8 @@
                             sticky: false,
                             image: 'correcto.png'
                         });
-
+                        cambiarEstatus($("#campoCita").val(), "Asistio", $('#comboEstatusCita' + $("#campoCita").val()));
+                        $('#comboEstatusCita' + $("#campoCita").val()).val("Asistio");
                     } else {
                         $.gritter.add({
                             title: "¡Ups, Error!",
@@ -118,6 +118,7 @@
     <fieldset>
         <input type="hidden" id="campoPaciente">
         <input type="hidden" id="campoMedico">
+        <input type="hidden" id="campoCita">
 
 
         <div class="row pt-0">
@@ -148,29 +149,33 @@
         <!-- altura -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Altura: </label>
-            <input type="number" class="form-control col" id="campoAltura" name="campoAltura" placeholder="Ingrese la altura" required>
+            <input type="number" class="form-control col" id="campoAltura" name="campoAltura"
+                placeholder="Ingrese la altura" required>
         </div>
 
         <!-- presion arterial -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Presion arterial: </label>
             <div class="d-flex">
-                <input type="number" class="form-control col " id="campoSistole"  name="campoSistole" placeholder="Sístole" required>
-                <input type="number" class="form-control col ms-2" id="campoDiastole" name="campoDiastole" placeholder="Diástole" required>
+                <input type="number" class="form-control col " id="campoSistole" name="campoSistole"
+                    placeholder="Sístole" required>
+                <input type="number" class="form-control col ms-2" id="campoDiastole" name="campoDiastole"
+                    placeholder="Diástole" required>
             </div>
         </div>
 
         <!-- temperatura -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Temperatura: </label>
-            <input type="number" class="form-control col" id="campoTemperatura" name="campoTemperatura" placeholder="Ingrese temperatura en °C"
-                required>
+            <input type="number" class="form-control col" id="campoTemperatura" name="campoTemperatura"
+                placeholder="Ingrese temperatura en °C" required>
         </div>
 
         <!-- oxigeno -->
         <div class="mt-0">
             <label class="form-label mt-4 fw-bold">Saturación de oxigeno: </label>
-            <input type="number" class="form-control col" id="campoOxigeno" name="campoOxigeno" placeholder="Ingrese el oxigeno" required>
+            <input type="number" class="form-control col" id="campoOxigeno" name="campoOxigeno"
+                placeholder="Ingrese el oxigeno" required>
         </div>
 
         <!-- Frecuencia cardiaca -->
