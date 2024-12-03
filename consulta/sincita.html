@@ -1,0 +1,272 @@
+<script>
+
+
+    $(function () {
+        cargarPacientesSinCita();
+        cargarMedicosSinCita();
+        cargarEnfermeroSinCita();
+    });
+
+    //cargar pacientes
+    function cargarPacientesSinCita() {
+        $.ajax({
+            url: backend + "/pacientesSJLF/listarSJLF",
+            type: 'post',
+            datatype: 'json',
+            xhrFields: { withCredentials: true },
+
+            success: function (respuesta) {
+                comboPacienteSinCita(respuesta);
+                console.log(respuesta);
+            }
+        });
+    }
+
+
+    //filtrar paciente
+    function buscarPacientesSinCita(texto) { //el texto de la caja de texto
+
+        if (texto != '') {
+            $.ajax({
+                url: backend + "/pacientesSJLF/filtrarPacienteSJLF",
+                type: 'post',
+                datatype: 'json',
+                data: texto,
+                contentType: 'application/json',
+
+                success: function (respuesta) {
+
+                    if (respuesta != '') {
+                        console.log(respuesta);
+                        comboPacienteSinCita(respuesta);
+                        $("#nuevoPacienteSinCita").addClass("d-none");
+
+                    } else {
+                        $("#nuevoPacienteSinCita").removeClass("d-none");
+                        comboPacienteSinCita(respuesta);
+                    }
+                }
+            });
+        }
+        else {
+            cargarPacientesSinCita();
+        }
+    }
+
+
+    //combo pacientes
+    function comboPacienteSinCita(lista) {
+        var combo = '<select class="form-select" id="comboPacienteSinCita">'
+        $.each(lista, function (i, paciente) {
+            combo += '<option value=' + paciente.id + ' >' + paciente.nombreSJLF + '( ' + paciente.curpSJLF + ')' + '</option>';
+        });
+        combo += '</select>';
+        $("#divComboPacienteSinCita").html(combo);
+    }
+
+    //cargar medicos
+    function cargarMedicosSinCita() {
+        $.ajax({
+            url: backend + "/medicosSJLF/listarSJLF",
+            type: 'post',
+            datatype: 'json',
+            xhrFields: { withCredentials: true },
+
+            success: function (respuesta) {
+                console.log(respuesta);
+                comboMedicosSinCita(respuesta);
+            }
+        });
+    }
+
+    //combo medicos
+    function comboMedicosSinCita(lista) {
+        var combo = '<select class="form-select" id="comboMedicoSinCita">'
+        $.each(lista, function (i, medico) {
+            combo += '<option value=' + medico.id + ' >' + medico.nombreSJLF + ' ' + medico.apellidosSJLF + '</option>';
+        });
+        combo += '</select>';
+        $("#divComboMedicosSinCita").html(combo);
+    }
+
+    //cargar enfermeros
+    function cargarEnfermeroSinCita() {
+        $.ajax({
+            url: backend + "/enfermerosSJLF/listarSJLF",
+            type: 'post',
+            datatype: 'json',
+            xhrFields: { withCredentials: true },
+
+            success: function (respuesta) {
+                console.log(respuesta);
+                comboEnfermeroSinCita(respuesta);
+            }
+        });
+    }
+
+    //combo enfermeros
+    function comboEnfermeroSinCita(lista) {
+        var combo = '<select class="form-select" id="comboEnfermeroSinCita">'
+        $.each(lista, function (i, enfermero) {
+            combo += '<option value=' + enfermero.id + ' >' + enfermero.nombreSJLF + '</option>';
+        });
+        combo += '</select>';
+        $("#divComboEnfermero").html(combo);
+    }
+
+    //validar que todos los campos esten rellenos
+    $("#formSinCita").validate({
+            submitHandler: function (form) {
+            alert("Formulario válido. Procesando...");
+
+            var datos = {
+                paciente: {
+                    id: $("#comboPacienteSinCita").val()
+                },
+                medico: {
+                    id: $("#comboMedicoSinCita").val()
+                },
+                enfermero: {
+                    id: $("#comboEnfermeroSinCita").val()
+                },
+
+                pesoSJLF: $("#campoPeso").val(),
+                alturaSJLF: $("#AlturaCampo").val(),
+                sistoleSJLF: $("#campoSistole").val(),
+                diastoleSJLF: $("#campoDiastole").val(),
+                temperaturaSJLF: $("#campoTemperatura").val(),
+                oxigenoSJLF: $("#campoOxigeno").val(),
+                fcSJLF: $("#campoCardiaca").val(),
+                sintomasSJLF: $("#campoSintomas").val()
+            }
+
+            $.ajax({
+                url: backend + "/consultasSJLF/guadarSJLF",
+                type: 'post',
+                datatype: 'json',
+                data: JSON.stringify(datos),
+                contentType: 'application/json',
+                xhrFields: { withCredentials: true },
+
+                success: function (respuesta) {
+                    console.log(respuesta);
+
+                    if (respuesta == '¡Consulta creada exitosamente!') {
+                        $("#nuevaConsultaModal").modal("hide");
+                        $.gritter.add({
+                            title: "¡Listo!",
+                            text: respuesta,
+                            sticky: false,
+                            image: 'correcto.png'
+                        });
+                       
+                    } else {
+                        $.gritter.add({
+                            title: "¡Ups, Error!",
+                            text: respuesta,
+                            sticky: false,
+                            image: 'cancelar.png'
+                        })
+                    }
+                }
+            });
+            
+        }
+    })
+
+
+    //crear consulta sin cita
+    function crearConsultaSinCita() {
+        $("#formSinCita").submit()
+    }
+
+
+</script>
+
+<form >
+    <div>
+        <label for="buscarPaciente" class="form-label mt-4"><i class="bi bi-search"></i> Datos del paciente:
+        </label>
+        <input type="text" class="form-control" id="buscarPaciente" placeholder="Buscar... "
+            onkeyup="buscarPacientesSinCita(this.value)">
+    </div>
+
+
+    <div id="nuevoPacienteSinCita" data-bs-dismiss="modal" class="d-none row justify-content-center ps-2 pe-2">
+        <button class="btn btn-success" type="button" onclick="$( '#divPrincipal').load('Pacientes/nuevo.html ')">Nuevo
+            paciente</button>
+    </div>
+
+    <div>
+        <label for="divComboPacienteSinCita" class="form-label mt-4">Paciente: </label>
+        <div id="divComboPacienteSinCita"></div>
+    </div>
+    <div>
+        <label for="comboMedicosSinCita" class="form-label mt-4">Medico: </label>
+        <div id="divComboMedicosSinCita"></div>
+    </div>
+
+    <div class="mt-0">
+        <label for="comboEnfermero" class="form-label mt-4 fw-bold">Enfermero: </label>
+        <div id="divComboEnfermero"></div>
+    </div>
+</form>
+
+
+<form id="formSinCita" class="was-validated">
+    <fieldset>
+
+        <!-- peso -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Peso: </label>
+            <input type="number" class="form-control col required" id="pesoCampo" placeholder="Ingrese el peso en Kg"
+                required name="pesoCampo">
+        </div>
+
+        <!-- altura -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Altura: </label>
+            <input type="number" class="form-control col" id="AlturaCampo" name="AlturaCampo"
+                placeholder="Ingrese la altura" required>
+        </div>
+
+        <!-- presion arterial -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Presion arterial: </label>
+            <div class="d-flex">
+                <input type="number" class="form-control col " id="campoSistole" name="campoSistole"
+                    placeholder="Sístole" required>
+                <input type="number" class="form-control col ms-2" id="campoDiastole" name="campoDiastole"
+                    placeholder="Diástole" required>
+            </div>
+        </div>
+
+        <!-- temperatura -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Temperatura: </label>
+            <input type="number" class="form-control col" id="campoTemperatura" name="campoTemperatura"
+                placeholder="Ingrese temperatura en °C" required>
+        </div>
+
+        <!-- oxigeno -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Saturación de oxigeno: </label>
+            <input type="number" class="form-control col" id="campoOxigeno" name="campoOxigeno"
+                placeholder="Ingrese el oxigeno" required>
+        </div>
+
+        <!-- Frecuencia cardiaca -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Frecuencia cardíaca: </label>
+            <input type="number" class="form-control col" id="campoCardiaca" name="campoCardiaca"
+                placeholder="Ingrese la frecuencia cardiaca" required>
+        </div>
+
+        <!-- sintomas -->
+        <div class="mt-0">
+            <label class="form-label mt-4 fw-bold">Sintomas: </label>
+            <textarea class="form-control" aria-label="With textarea" id="campoSintomas" name="campoSintomas"
+                placeholder="Redacte los sintomas..." required></textarea>
+        </div>
+    </fieldset>
+</form>
