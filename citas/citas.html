@@ -28,15 +28,20 @@
                 '<td scope="row">' + citas.paciente.nombreSJLF + '<br>(' + citas.medico.nombreSJLF + " " + citas.medico.apellidosSJLF + ') </td>' +
                 '<td scope="row" class="col d-flex">' + comboEstatusCitas(citas) + ' <div id="alertaEstatus' + citas.id + '"> </div>  </td>' +
                 '<td scope="row" class="col"> <input type="datetime-local" class="date form-control"  value="' + citas.fechaHTML + '" onchange="cambiarFecha(' + citas.id + ',this.value, this);"><div id="alertaCitas' + citas.id + '"> </div>  </td> ' +
-                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarCita(' + citas.id + ', this.value);"  data-bs-toggle="modal" data-bs-target="#modificarCitaModal"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarCita(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>  <button type="button" class=" btn btn-dark " onclick="iniciarConsulta(' + citas.id + ');"  data-bs-toggle="modal" data-bs-target="#nuevaConsultaModal"> <i class="bi bi-heart-pulse"></i>  </button>   </td>' +
-                '</tr>';
+                '<td scope="row d-flex"> <button type="button" class="btn btnmodificar btn-info" onclick="modificarCita(' + citas.id + ', this.value);"  data-bs-toggle="modal" data-bs-target="#modificarCitaModal"><i class="bi bi-pencil-square"></i></button> <button type="button" class=" btn btn-danger btnelimina" onclick="eliminarCita(' + citas.id + ');"> <i class="bi bi-trash3-fill"></i>   </button>  <div id="divBotonSignos' + citas.id + '" class="d-inline">' +   
+                    
+                    
+                   (citas.estatus == 'Programada'  || citas.estatus == 'Reprogramada'  ? '<button type="button" class=" btn btn-dark " onclick="iniciarConsulta(' + citas.id + ');"  data-bs-toggle="modal" data-bs-target="#nuevaConsultaModal"> <i class="bi bi-heart-pulse"></i>  </button> ' : '') +
+                    
+                    '</div> </td>' +
+                    '</tr>';
         });
         $('#tablaCitas > tbody').html(body);
     }
 
     //funcion para poner los combos de los estado de las citas
     function comboEstatusCitas(citas) {
-        var combo = '<select class="form-select" onchange="cambiarEstatus(' + citas.id + ',this.value, this);">'
+        var combo = '<select class="form-select" onchange="cambiarEstatus(' + citas.id + ',this.value, this);" id="comboEstatusCita' + citas.id + '">'
         $.each(citas.estatusCita, function (i, ecita) {
             combo += '<option value="' + ecita + '" ' + (citas.estatus == ecita ? 'selected' : '') + ' >' + ecita + '</option>';
         });
@@ -60,6 +65,8 @@
             xhrFields: { withCredentials: true },
 
             success: function (respuesta) {
+                if(nuevoEstatus == 'Programada' || nuevoEstatus=='Reprogramada') $ ("#divBotonSignos" + idCita).html('<button type="button" class=" btn btn-dark " onclick="iniciarConsulta(' + idCita + ');"  data-bs-toggle="modal" data-bs-target="#nuevaConsultaModal"> <i class="bi bi-heart-pulse"></i>  </button> ') ;
+                else $("#divBotonSignos" + idCita).empty();
 
                 $(elemento).removeClass("is-invalid");
 
@@ -165,7 +172,7 @@
                         text: respuesta,
                         sticky: false,
                         image: 'correcto.png'
-                    }); 
+                    });
 
                     $("#divPrincipal").load("citas/citas.html");
 
@@ -205,41 +212,41 @@
             xhrFields: { withCredentials: true },
 
             success: function (respuesta) {
-                cargarPacientes(respuesta.paciente.id, idCita);
-                cargarMedicos(respuesta.medico.id, idCita);
+                buscarPacienteMod(respuesta.paciente.id, respuesta.id);
+                buscarMedicoMod(respuesta.medico.id, respuesta.id);
             }
         });
     }
 
     //cargar pacientes
-    function cargarPacientes(idPaciente, idCita) {
+    function buscarPacienteMod(idPaciente, idCita) {
         $.ajax({
             url: backend + "/pacientesSJLF/listarSJLF",
             type: 'post',
             datatype: 'json',
             xhrFields: { withCredentials: true },
             success: function (respuesta) {
-                comboPaciente(respuesta, idPaciente, idCita);
+                comboPacienteMod(respuesta, idPaciente, idCita);
             }
         });
     }
 
     //cargar medicos
-    function cargarMedicos(idMedico, idCita) {
+    function buscarMedicoMod(iDMedico, idCita) {
         $.ajax({
             url: backend + "/medicosSJLF/listarSJLF",
             type: 'post',
             datatype: 'json',
             xhrFields: { withCredentials: true },
             success: function (respuesta) {
-                comboMedicos(respuesta, idMedico, idCita);
+                comboMedicosMod(respuesta, iDMedico, idCita);
             }
         });
     }
 
 
     //combo pacientes
-    function comboPaciente(lista, idPaciente, idCita) {
+    function comboPacienteMod(lista, idPaciente, idCita) {
         var combo = '<select class="form-select" id="comboPaciente"  onchange="actualizarPaciente(this.value, ' + idCita + ');">'
         $.each(lista, function (i, paciente) {
             combo += '<option ' + ((paciente.id == idPaciente) ? 'selected' : 'value= "' + paciente.id + '"') + '>' + paciente.nombreSJLF + '( ' + paciente.curpSJLF + ')' + '</option>';
@@ -249,13 +256,13 @@
     }
 
     //combo medicos
-    function comboMedicos(lista, idMedico, idCita) {
+    function comboMedicosMod(lista, idMedico, idCita) {
         var combo = '<select class="form-select" id="comboMedico" onchange="actualizarMedico(this.value, ' + idCita + ');" >'
         $.each(lista, function (i, medico) {
             combo += '<option ' + ((medico.id == idMedico) ? 'selected' : 'value= "' + medico.id + '"') + ' >' + medico.nombreSJLF + ' ' + medico.apellidosSJLF + '</option>';
         });
         combo += '</select>';
-        $("#divComboMedicos").html(combo);
+        $("#divMedicoCombo").html(combo);
     }
 
 
@@ -344,7 +351,7 @@
     </div>
 </div>
 
-<div id="divMensajesCitas" class="text-center fw-bold "></div>
+<!-- tabla de citas -->
 
 <table class="table table-hover " id="tablaCitas">
     <thead class=" align-items-center">
@@ -352,9 +359,18 @@
             <th scope="col" class="align-middle">Paciente / Médico</th>
             <th scope="col" class="align-middle">Estatus</th>
             <th scope="col" class="align-middle ">Fecha</th>
-            <th scope="col" class="align-middle"><button type="button" data-bs-toggle="modal"
-                    data-bs-target="#nuevaCitaModal" onclick=' $("#divNuevaCita").load("citas/nueva.html");'
-                    class="btn btn-success align-middle">Agendar cita <i class="bi bi-plus-circle"></i> </button></th>
+
+            <th scope="col" class="align-middle">
+
+                <button type="button" data-bs-toggle="modal" data-bs-target="#nuevaCitaModal"
+                    onclick=' $("#divNuevaCita").load("citas/nueva.html");' class="btn btn-outline-success  d-inline">Agendar cita <i class="bi bi-plus-circle"></i> </button>
+
+                <button type="button" data-bs-toggle="modal" data-bs-target="#consultaSinCitaModal"
+                    onclick=' $("#divConsultaSinCita").load("consulta/sincita.html");' class="btn btn-outline-light d-inline">Consulta sin cita <i class="bi bi-plus-circle"></i> </button>
+
+
+            </th>
+
         </tr>
     </thead>
     <tbody>
@@ -414,9 +430,29 @@
 
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-ligth" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" onclick="$('#divPrincipal').load('citas/citas.html') " class="btn btn-primary"
-                    data-bs-dismiss="modal">Volver</button>
+                    data-bs-dismiss="modal">Guardar</button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Modal consulta sin cita-->
+<div class="modal fade" id="consultaSinCitaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Consulta sin cita</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0 " id="divConsultaSinCita">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="crearConsultaSinCita();" >Crear consulta</button>
+            </div>
+         </div>
     </div>
 </div>
